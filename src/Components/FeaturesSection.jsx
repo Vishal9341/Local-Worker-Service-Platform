@@ -127,10 +127,7 @@ const FeaturesSection = () => {
 
         {/* View All Services Button */}
         <div className="text-center mt-12">
-          <button className="inline-flex items-center space-x-2 bg-white border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-105">
-            <span>View All Services</span>
-            <ChevronRight size={18} />
-          </button>
+         
         </div>
       </div>
     </section>

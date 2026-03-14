@@ -104,9 +104,8 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Right Side - Login and Book Now Button */}
           <div className="hidden md:flex items-center space-x-4">
-            {/* Login Link */}
+            
             <a 
               href="#login" 
               className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
@@ -115,9 +114,8 @@ const Navbar = () => {
               <span>Login</span>
             </a>
 
-            {/* Book Now Button - Blue and White */}
-            <button className="bg-blue-600 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center space-x-2">
-              <span>Book Now</span>
+            <button className="bg-blue-600 text-white mx-10  px-6 py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center space-x-2">
+              <span>Sign Up</span>
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 
                 className="h-4 w-4" 
@@ -166,7 +164,6 @@ const Navbar = () => {
                     {link.label}
                   </a>
                   
-                  {/* Mobile Dropdown for Services */}
                   {link.hasDropdown && (
                     <div className="pl-4 mt-2 space-y-2 border-l-2 border-gray-100">
                       <a href="#plumbing" className="block py-1 text-sm text-gray-600 hover:text-blue-600">Plumbing</a>
@@ -179,7 +176,7 @@ const Navbar = () => {
                 </div>
               ))}
               
-              {/* Mobile Login */}
+  
               <a 
                 href="#login" 
                 className="flex items-center space-x-2 py-2 text-gray-700"
@@ -189,9 +186,8 @@ const Navbar = () => {
                 <span>Login</span>
               </a>
               
-              {/* Mobile Book Now Button */}
               <button className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 flex  items-center justify-center space-x-2 mt-2">
-                <span>Book Now</span>
+                <span>Sign Up</span>
                 <svg 
                   xmlns="http://www.w3.org/2000/svg" 
                   className="h-4 w-4" 

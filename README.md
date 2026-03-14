@@ -2,8 +2,8 @@
 
  This platform allows users to find and book local service providers such as electricians, plumbers, carpenters, cleaners, and other workers.
  The project is developed as a team project where frontend is built using React and Tailwind CSS, and backend is developed using Node.js and Express with database   support.
- Features
  
+ # Features
   User Features
   Login and register account
   Browse available services
@@ -23,8 +23,8 @@
   Manage users data
   View all bookings
   Control platform activities
-  
-  Tech Stack
+ 
+#  Tech Stack
   Frontend
   React JS
   Tailwind CSS

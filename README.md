@@ -5,35 +5,35 @@
  
  # Features
  ## User Features:
-  Login and register account
-  Browse available services
-  Search for local workers
-  View detailed service information
+ #### Login and register account
+ #### Browse available services
+ #### Search for local workers
+ #### View detailed service information
   
  ## Worker Features:
-   View assigned booking requests
-   Accept or reject service requests
-   Manage personal service details
-   Update availability status
+  ####  View assigned booking requests
+  ####  Accept or reject service requests
+  ####  Manage personal service details
+  ####  Update availability status
    
  ## Admin Features:
-  Dashboard for system overview
-  Add new service categories
-  Manage workers data
-  Manage users data
-  View all bookings
-  Control platform activities
+ ####  Dashboard for system overview
+ ####  Add new service categories
+ #### Manage workers data
+ ####  Manage users data
+ ####  View all bookings
+ ####  Control platform activities
  
 #  Tech Stack
 ## Frontend:
-  React JS
-  Tailwind CSS
-  JavaScript (ES6)
-  React Routing
+ ####  React JS
+ ####  Tailwind CSS
+  #### JavaScript (ES6)
+ ####  React Routing
   
  ## Backend:
-  Node.js
-  Express.js
+ ####  Node.js
+ ####  Express.js
   
 ## Database:
- MongoDB
+####  MongoDB

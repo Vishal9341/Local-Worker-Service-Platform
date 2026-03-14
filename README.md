@@ -4,19 +4,19 @@
  The project is developed as a team project where frontend is built using React and Tailwind CSS, and backend is developed using Node.js and Express with database   support.
  
  # Features
-  User Features
+ ## User Features:
   Login and register account
   Browse available services
   Search for local workers
   View detailed service information
   
-  Worker Features
+ ## Worker Features:
    View assigned booking requests
    Accept or reject service requests
    Manage personal service details
    Update availability status
    
-  Admin Features
+ ## Admin Features:
   Dashboard for system overview
   Add new service categories
   Manage workers data
@@ -25,15 +25,15 @@
   Control platform activities
  
 #  Tech Stack
-  Frontend
+## Frontend:
   React JS
   Tailwind CSS
   JavaScript (ES6)
   React Routing
   
-  Backend
+ ## Backend:
   Node.js
   Express.js
   
- Database
+## Database:
  MongoDB

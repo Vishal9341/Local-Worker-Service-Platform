@@ -7,10 +7,12 @@ import Footer from './Components/Footer';
 const App = () => {
   return (
     <div>
+      
       <Nav />
       <Hero />
       <FeaturesSection />
       <Footer />
+      
     </div>
   )
 }

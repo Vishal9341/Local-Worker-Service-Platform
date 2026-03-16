@@ -1,20 +1,41 @@
-import React from 'react'
-import Nav from './Components/Nav';
-import Hero from './Components/Hero';
-import FeaturesSection from './Components/FeaturesSection';
-import Footer from './Components/Footer';
+import Nav from "./Components/Nav";
+import Hero from "./Components/Hero";
+import FeaturesSection from "./Components/FeaturesSection";
+import Footer from "./Components/Footer";
+import About from './Pages/About1';
+import SignUp from "./Pages/SignUp";  
+import Login from  "./Pages/loginTemp";
+import ForgotPassword from "./Pages/Forgetpage";
+
+import { Routes, Route } from "react-router-dom";
+
 
 const App = () => {
   return (
-    <div>
-      
+    <>
       <Nav />
-      <Hero />
-      <FeaturesSection />
-      <Footer />
-      
-    </div>
-  )
-}
 
-export default App
+      <Routes>
+        <Route
+          path="/"
+          element={ <>
+              <Hero />
+              <FeaturesSection />
+              < Footer />
+               </>
+               }
+             />
+
+        <Route path="/about" element={<About />} />
+         <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/Forget" element={< ForgotPassword />} />
+
+      </Routes>
+
+    
+    </>
+  );
+};
+
+export default App;

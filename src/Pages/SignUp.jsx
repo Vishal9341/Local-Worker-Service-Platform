@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from "react-router-dom";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -22,33 +23,13 @@ const SignUp = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 border border-gray-100 transition-all duration-300 hover:shadow-2xl">
-        <div className="text-center mb-8">
+        <div className="text-center mb-4">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
           <p className="text-gray-500">Join the Local Worker Platform today</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="flex p-1 bg-gray-100 rounded-lg mb-6">
-            <button
-              type="button"
-              onClick={() => setFormData({ ...formData, role: 'user' })}
-              className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${
-                formData.role === 'user' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              I'm a User
-            </button>
-            <button
-              type="button"
-              onClick={() => setFormData({ ...formData, role: 'worker' })}
-              className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${
-                formData.role === 'worker' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              I'm a Worker
-            </button>
-          </div>
-
+    
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">Full Name</label>
             <input
@@ -70,7 +51,7 @@ const SignUp = () => {
               required
               value={formData.email}
               onChange={handleChange}
-              placeholder=" "
+              placeholder="Enter your E-maiL"
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all placeholder:text-gray-400"
             />
           </div>
@@ -83,7 +64,7 @@ const SignUp = () => {
               required
               value={formData.phone}
               onChange={handleChange}
-              placeholder=" "
+              placeholder="Enter your mobile number"
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all placeholder:text-gray-400"
             />
           </div>
@@ -111,9 +92,13 @@ const SignUp = () => {
 
         <p className="text-center text-sm text-gray-600 mt-8">
           Already have an account?{' '}
-          <a href="#" className="font-semibold text-indigo-600 hover:underline">
-            Log in
-          </a>
+           <Link
+    to="/login"
+    className="font-semibold text-indigo-600 hover:underline"
+  >
+    Log in
+  </Link>
+
         </p>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from "react-router-dom";
 
 const FooterMinimal = () => {
   const currentYear = new Date().getFullYear();
@@ -6,7 +7,7 @@ const FooterMinimal = () => {
   const sections = [
     {
       title: 'Company',
-      links: ['About us', 'Investor Relations', 'Terms & conditions', 'Privacy policy', 'Anti-discrimination policy', 'Careers']
+      links: ['About us', 'Terms & conditions', 'Privacy policy', 'Careers']
     },
     {
       title: 'For customers',

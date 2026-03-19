@@ -7,6 +7,8 @@ import SignUp from "./Pages/SignUp";
 import Login from  "./Pages/loginTemp";
 import ForgotPassword from "./Pages/Forgetpage";
 import Professional from "./Pages/Professional";
+import Service from "./Pages/Service";
+import Contact from "./Pages/Contact";
 
 import { Routes, Route } from "react-router-dom";
 
@@ -22,7 +24,7 @@ const App = () => {
           element={ <>
               <Hero />
               <FeaturesSection />
-              < Footer />
+              
                </>
                }
              />
@@ -32,9 +34,11 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/Forget" element={< ForgotPassword />} />
           <Route path="/Professional" element={<Professional />} />
+          <Route path="/Service" element={<Service />} />
+            <Route path="/Contact" element={<Contact />} />
 
       </Routes>
-
+    < Footer />
     
     </>
   );

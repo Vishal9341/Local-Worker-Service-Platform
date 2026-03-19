@@ -20,13 +20,13 @@ const ServiceHero = () => {
                 Quality work, guaranteed!
               </span>
               <br></br>
-              <div>
+              {/* <div>
                 <Link to="/Professional">
                 <button className="bg-linear-to-r from-blue-600 to-blue-300 w-half  font-semibold rounded-xl px-6 py-3 text-4xl font-medium text-cyan-50 hover:from-blue-300 hover:to-blue-600 transition-all duration-300 flex items-center justify-center space-x-2  group-hover:shadow-lg ">
                 <span>Be a Professional</span> 
                  </button>
                 </Link>
-              </div>
+              </div> */}
               
             </p>
 

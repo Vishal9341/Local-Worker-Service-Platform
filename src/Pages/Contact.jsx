@@ -16,10 +16,9 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* Main Content Area */}
       <main className=" max-w-7xl mx-auto px-4 pb-24 grid lg:grid-cols-2 gap-16 items-start">
-        {/* Form Section */}
-        <div className="bg-gradient-to-br from-blue-100 via-indigo-100 to-purple-100 p-8 rounded-2xl shadow-lg border border-black rounded-3xl p-8 md:p-12 shadow-2xl relative group overflow-hidden">
+    
+        <div className="bg-linear-to-br from-blue-100 via-indigo-100 to-purple-100 p-8 rounded-2xl shadow-lg border border-black rounded-3xl p-8 md:p-12 shadow-2xl relative group overflow-hidden">
           <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-all duration-700"></div>
           
           <form className="space-y-8 relative z-10">
@@ -69,9 +68,7 @@ const Contact = () => {
           </form>
         </div>
 
-        {/* Contact Info & Area Map Placeholder */}
         <div className="lg:pt-12 space-y-12">
-          {/* Info Grid */}
           <div className="grid sm:grid-cols-2 gap-8">
             <div className="space-y-3">
               <div className="p-3 bg-blue-500/10 w-fit rounded-xl border border-blue-500/20 text-blue-400 ring-4 ring-blue-500/5">
@@ -89,7 +86,6 @@ const Contact = () => {
             </div>
           </div>
 
-          {/* Social Links */}
           <div className="space-y-6">
             <h4 className="text-sm font-semibold uppercase tracking-widest text-slate-500">Connect with us</h4>
             <div className="flex gap-4">
@@ -99,9 +95,7 @@ const Contact = () => {
                 </a>
               ))}
             </div>
-          </div>
-
-        
+          </div>       
         </div>
       </main>
     </div>

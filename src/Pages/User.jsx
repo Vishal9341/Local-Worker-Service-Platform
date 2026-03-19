@@ -21,19 +21,16 @@ const Professional = () => {
     console.log(formData);
     alert("Details Submitted Successfully!");
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
       
       <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-lg">
         
         <h2 className="text-2xl font-bold text-center mb-6">
-          Worker Registration
+          User Registration
         </h2>
-
         <form onSubmit={handleSubmit} className="space-y-4">
-
-          
+ 
           <div>
             <label className="block text-sm font-medium mb-1">
               Full Name
@@ -49,7 +46,6 @@ const Professional = () => {
             />
           </div>
 
-          
           <div>
             <label className="block text-sm font-medium mb-1">
               Email
@@ -80,7 +76,6 @@ const Professional = () => {
             />
           </div>
 
-        
           <div>
             <label className="block text-sm font-medium mb-1">
               Phone Number
@@ -113,26 +108,7 @@ const Professional = () => {
           </div>
 
         
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Profession
-            </label>
-            <select
-              name="profession"
-              value={formData.profession}
-              onChange={handleChange}
-              className="w-full border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              required
-            >
-              <option value="">Select profession</option>
-              <option value="Plumber">Plumber</option>
-              <option value="Electrician">Electrician</option>
-              <option value="Carpenter">Carpenter</option>
-              <option value="Maid">Maid</option>
-              <option value="Painter">Painter</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
+    
 
           
           <button

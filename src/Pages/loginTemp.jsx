@@ -11,8 +11,7 @@ const Login = () => {
         </h2>
 
         <form className="space-y-4">
-
-          {/* Email */}
+        
           <div>
             <label className="block mb-1 text-sm font-medium">
               Email
@@ -24,7 +23,6 @@ const Login = () => {
             />
           </div>
 
-          {/* Password */}
           <div>
             <label className="block mb-1 text-sm font-medium">
               Password
@@ -36,7 +34,6 @@ const Login = () => {
             />
           </div>
 
-          {/* Forgot Password */}
           <div className="flex justify-end text-sm">
             <Link
               to="/Forget"
@@ -46,17 +43,14 @@ const Login = () => {
             </Link>
           </div>
 
-          {/* Login Button */}
           <button
             type="submit"
             className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition"
           >
             Login
           </button>
-
         </form>
 
-        {/* Signup link */}
         <p className="text-center text-sm mt-4">
           Don't have an account?{" "}
           <Link to="/signup" className="text-indigo-600 hover:underline">

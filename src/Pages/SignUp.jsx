@@ -21,7 +21,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-50 via-white to-purple-50 p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 border border-gray-100 transition-all duration-300 hover:shadow-2xl">
         <div className="text-center mb-4">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
@@ -44,7 +44,7 @@ const SignUp = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Email Address</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Email</label>
             <input
               type="email"
               name="email"

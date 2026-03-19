@@ -3,8 +3,6 @@ import React from "react";
 const About = () => {
   return (
     <div className="bg-gray-50 min-h-screen">
-
-      {/* Hero Section */}
       <section className="bg-indigo-400 text-white py-16">
         <div className="max-w-6xl mx-auto px-6 text-center">
           <h1 className="text-4xl font-bold mb-4">About Our Platform</h1>
@@ -15,9 +13,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Mission Section */}
       <section className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-10 items-center">
-        
         <div>
           <h2 className="text-3xl font-bold mb-4">Our Mission</h2>
           <p className="text-gray-600 mb-4">
@@ -41,7 +37,6 @@ const About = () => {
         />
       </section>
 
-      {/* Services Section */}
       <section className="bg-white py-16">
         <div className="max-w-6xl mx-auto px-6 text-center">
 
@@ -78,7 +73,6 @@ const About = () => {
         </div>
       </section>
 
-      {/* Why Choose Us */}
       <section className="max-w-6xl mx-auto px-6 py-16">
         
         <h2 className="text-3xl font-bold text-center mb-10">
@@ -114,11 +108,8 @@ const About = () => {
               Verified workers provide trustworthy services.
             </p>
           </div>
-
         </div>
-
       </section>
-
     </div>
   );
 };

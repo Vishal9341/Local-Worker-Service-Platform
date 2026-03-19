@@ -39,7 +39,7 @@ const Login = () => {
           {/* Forgot Password */}
           <div className="flex justify-end text-sm">
             <Link
-              to="/forgot-password"
+              to="/Forget"
               className="text-indigo-600 hover:underline"
             >
               Forgot Password?

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Menu, X, User, ChevronDown } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const ForgotPassword = ({ onBack }) => {
   const [email, setEmail] = useState('');
@@ -10,7 +11,7 @@ const ForgotPassword = ({ onBack }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-50 via-white to-purple-50 p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 border border-gray-100 transition-all duration-300 hover:shadow-2xl text-center">
         <div className="mb-8">
           <div className="w-20 h-20 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -43,15 +44,13 @@ const ForgotPassword = ({ onBack }) => {
           </button>
         </form>
 
-        <button
+        <Link
+        to="/signup"
           onClick={onBack}
           className="mt-8 text-sm font-semibold text-indigo-600 hover:text-indigo-800 flex items-center justify-center mx-auto transition-colors"
         >
-          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
           Back to Sign Up
-        </button>
+        </Link>
       </div>
     </div>
   );

@@ -115,6 +115,7 @@ const Professional = () => {
               <option value="Carpenter">Carpenter</option>
               <option value="Maid">Maid</option>
               <option value="Painter">Painter</option>
+              <option value="Other">Other</option>
             </select>
           </div>
 

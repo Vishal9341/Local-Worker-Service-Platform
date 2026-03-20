@@ -89,11 +89,8 @@ const Navbar = () => {
         </div>
 
         {isOpen && (
-
           <div className="md:hidden py-4 border-t">
-
             <div className="flex flex-col space-y-3">
-
               {navLinks.map((link) => (
                 <Link
                   key={link.id}

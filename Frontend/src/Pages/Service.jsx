@@ -109,7 +109,6 @@ const Service = () => {
         ))}
       </div>
 
-      {/* CTA Section */}
       <section className="max-w-5xl mx-auto mt-32 p-12 rounded-[3rem] bg-linear-to-br from-indigo-600 to-blue-700 text-center relative overflow-hidden shadow-2xl">
         <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
         <div className="relative z-10">

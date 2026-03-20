@@ -19,20 +19,15 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div className="flex justify-between items-center py-3">
-
-          {/* Logo */}
           <div className="flex flex-col">
             <span className="text-xl font-bold text-gray-900">
               Local <span className="text-blue-600">Worker</span>
             </span>
-
             <span className="text-xs text-gray-500 -mt-1">
               Service Platform
             </span>
           </div>
 
-
-          {/* Desktop Links */}
           <div className="hidden md:flex items-center space-x-8">
 
             {navLinks.map((link) => (
@@ -52,11 +47,8 @@ const Navbar = () => {
 
           </div>
 
-
-          {/* Login + Signup */}
           <div className="hidden md:flex items-center space-x-4">
 
-            {/* Login */}
             <Link
               to="/login"
               className="flex items-center space-x-2 text-gray-700 hover:text-blue-600"
@@ -94,14 +86,8 @@ const Navbar = () => {
             </div>
           </div>
 
-
-          {/* Mobile menu button */}
-       
-
         </div>
 
-
-        {/* Mobile menu */}
         {isOpen && (
 
           <div className="md:hidden py-4 border-t">
@@ -121,7 +107,6 @@ const Navbar = () => {
                   {link.label}
                 </Link>
               ))}
-
               <Link
                 to="/login"
                 onClick={() => setIsOpen(false)}
@@ -129,8 +114,6 @@ const Navbar = () => {
               >
                 Login
               </Link>
-
-
               <div className="flex flex-col">
                 <span className="font-semibold">Sign Up</span>
                 <Link
@@ -140,7 +123,6 @@ const Navbar = () => {
                 >
                   User
                 </Link>
-
                 <Link
                   to="/Professional"
                   onClick={() => setIsOpen(false)}
@@ -148,15 +130,10 @@ const Navbar = () => {
                 >
                   Professional
                 </Link>
-
               </div>
-
             </div>
-
           </div>
-
         )}
-
       </div>
     </nav>
   );

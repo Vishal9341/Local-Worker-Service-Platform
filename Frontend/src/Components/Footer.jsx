@@ -42,12 +42,10 @@ const Footer = () => {
   return (
     <footer className="bg-gray-700 text-white">
       <div className="container mx-auto px-6 py-12">
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {sections.map((section, index) => (
             <div key={index}>
               <h3 className="font-semibold mb-4">{section.title}</h3>
-
               <ul className="space-y-2">
                 {section.links.map((link, i) => (
                   <li key={i}>

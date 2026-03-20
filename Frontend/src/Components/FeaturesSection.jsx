@@ -67,7 +67,7 @@ const FeaturesSection = () => {
   return (
     <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
+        
         <div className="text-center mb-16">
           <span className="inline-block px-4 py-2 bg-blue-100 text-blue-600 rounded-full text-sm font-semibold mb-4">
             Our Services
@@ -80,14 +80,12 @@ const FeaturesSection = () => {
           </p>
         </div>
 
-        {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service) => (
             <div
               key={service.id}
               className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
             >
-              {/* Image Container */}
               <div className="relative h-56 overflow-hidden">
                 <img
                   src={service.image}
@@ -95,11 +93,9 @@ const FeaturesSection = () => {
                   className="w-full h-full object-cover"
                 />
                 
-                {/* Overlay Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div> 
+                <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent"></div> 
               </div>
 
-              {/* Content */}
               <div className="p-6">
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">
                   {service.title}
@@ -108,7 +104,6 @@ const FeaturesSection = () => {
                   {service.description}
                 </p>
                 
-                {/* Features List */}
                 <div className="space-y-2 mb-8">
                   <div className="flex items-center text-sm text-gray-600">
                     <Shield size={16} className="text-green-500 mr-2" />
@@ -116,18 +111,12 @@ const FeaturesSection = () => {
                   </div>
                 </div>
 
-                {/* Book Button */}
-                <button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center space-x-2 group-hover:shadow-lg">
+                <button className="w-full bg-linear-to-r from-blue-600 to-blue-700 text-white py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center space-x-2 group-hover:shadow-lg">
                   <span>Book Now</span>
                 </button>
               </div>
             </div>
           ))}
-        </div>
-
-        {/* View All Services Button */}
-        <div className="text-center mt-12">
-         
         </div>
       </div>
     </section>

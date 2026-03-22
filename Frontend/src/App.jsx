@@ -11,6 +11,7 @@ import Service from "./Pages/Service";
 import Contact from "./Pages/Contact";
 import Worker from "./Pages/Worker";
 import User from "./Pages/User"
+import NotFound from "./Pages/NotFound";
 
 import { Routes, Route } from "react-router-dom";
 
@@ -38,6 +39,7 @@ const App = () => {
           <Route path="/Contact" element={<Contact />} />
           <Route path="/worker" element={<Worker />} />
           <Route path="/user" element={<User />}  />
+           <Route path="/*" element={<NotFound />}  />
 
       </Routes>
     < Footer />

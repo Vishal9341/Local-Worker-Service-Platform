@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from 'react';
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -10,14 +11,42 @@ const SignUp = () => {
     role: 'user' 
   });
 
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form Submitted:', formData);
-    alert('Sign Up Successful (Check Console)');
+    setError('');
+    setLoading(true);
+    try {
+      const res = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Registration failed');
+      
+      alert('Sign Up Successful');
+      
+      // Auto-login after signup
+      login(data);
+      if (data.role === 'worker') {
+        navigate('/worker');
+      } else {
+        navigate('/'); // Redirect user to home
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -29,7 +58,7 @@ const SignUp = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-    
+          {error && <div className="p-3 bg-red-100 text-red-700 rounded-lg text-sm">{error}</div>}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">Full Name</label>
             <input
@@ -82,11 +111,25 @@ const SignUp = () => {
             />
           </div>
 
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Account Type</label>
+            <select
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+            >
+              <option value="user">Normal User (Looking for workers)</option>
+              <option value="worker">Worker (Providing services)</option>
+            </select>
+          </div>
+
           <button
             type="submit"
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-indigo-200 transition-all transform hover:-translate-y-1 active:scale-95 mt-4"
+            disabled={loading}
+            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-indigo-200 transition-all transform hover:-translate-y-1 active:scale-95 mt-4 disabled:opacity-70 disabled:hover:translate-y-0"
           >
-            Create Account
+            {loading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
 

@@ -1,8 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const Worker = () => {
+  const { user, logout, loading } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && (!user || user.role !== 'worker')) {
+      navigate('/login');
+    }
+  }, [user, loading, navigate]);
+
   const [activeTab, setActiveTab] = useState('My Jobs');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [profileData, setProfileData] = useState({
+    name: user?.name || "Professional",
+    profession: user?.profession || "Plumber",
+    experience: "5 Yrs"
+  });
 
   const stats = [
     { label: 'Total Earnings', value: '$1,250.00', color: 'green' },
@@ -18,10 +35,13 @@ const Worker = () => {
   ];
 
   const availableJobs = [
-    { id: 101, title: 'Emergency Electrical Fix', location: '2.5 miles away', price: '$85', urgency: 'High' },
-    { id: 102, title: 'Wooden Shelf Repair', location: '4.0 miles away', price: '$40', urgency: 'Normal' },
-    { id: 103, title: 'Garden Maintenance', location: '1.2 miles away', price: '$55', urgency: 'Normal' },
-  ];
+    { id: 101, title: 'Emergency Electrical Fix', category: 'Electrician', location: '2.5 miles away', price: '$85', urgency: 'High' },
+    { id: 102, title: 'Wooden Shelf Repair', category: 'Carpenter', location: '4.0 miles away', price: '$40', urgency: 'Normal' },
+    { id: 103, title: 'Garden Maintenance', category: 'Other', location: '1.2 miles away', price: '$55', urgency: 'Normal' },
+    { id: 104, title: 'Bathroom Pipe Leak', category: 'Plumber', location: '3.0 miles away', price: '$90', urgency: 'High' },
+    { id: 105, title: 'Deep Cleaning Service', category: 'Maid', location: '5.0 miles away', price: '$70', urgency: 'Normal' },
+    { id: 106, title: 'Wall Painting', category: 'Painter', location: '1.5 miles away', price: '$150', urgency: 'Normal' },
+  ].filter(job => job.category === profileData.profession || !profileData.profession);
 
   const navItems = [
     { name: 'My Jobs', icon: '📋' },
@@ -31,7 +51,7 @@ const Worker = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex font-sans selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen pt-[72px] bg-slate-950 text-slate-100 flex font-sans selection:bg-indigo-500 selection:text-white">
       <aside 
         className={`${isSidebarOpen ? 'w-64' : 'w-20'} bg-slate-900 border-r border-slate-800 transition-all duration-300 flex flex-col`}
       >
@@ -66,7 +86,7 @@ const Worker = () => {
             </div>
             {isSidebarOpen && (
               <div className="overflow-hidden">
-                <p className="text-sm font-bold truncate">Vishal Kumar</p>
+                <p className="text-sm font-bold truncate">{user?.name || "Loading..."}</p>
                 <p className="text-xs text-green-500 font-medium tracking-wide flex items-center gap-1">
                   <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
                   Online
@@ -81,7 +101,7 @@ const Worker = () => {
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>
             <h1 className="text-3xl md:text-4xl font-black mb-2 tracking-tight">
-              Welcome back, <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-cyan-400">Vishal</span>
+              Welcome back, <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-cyan-400">{user?.name ? user.name.split(' ')[0] : 'Worker'}</span>
             </h1>
             <p className="text-slate-400 font-medium">Here's what's happening today.</p>
           </div>
@@ -211,31 +231,46 @@ const Worker = () => {
                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Profile Large" className="rounded-[2.4rem] bg-slate-900" />
                 </div>
                 <div className="flex-1 text-center md:text-left">
-                  <h2 className="text-4xl font-black mb-4">Vishal Kumar</h2>
-                  <div className="flex flex-wrap gap-3 justify-center md:justify-start mb-8">
-                    {['Expert Plumber', 'Electrician', 'Carpenter'].map(skill => (
-                      <span key={skill} className="px-5 py-2 bg-slate-800 rounded-full text-xs font-black text-indigo-300 border border-slate-700">
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="grid grid-cols-3 gap-6 mb-8 max-w-md mx-auto md:mx-0">
-                    <div className="text-center md:text-left border-r border-slate-800 pr-6">
-                      <p className="text-slate-500 text-[10px] font-black uppercase mb-1">Rating</p>
-                      <p className="text-xl font-black text-yellow-500">4.9/5</p>
+                  {isEditingProfile ? (
+                    <div className="space-y-4 mb-6">
+                      <input type="text" value={profileData.name} onChange={(e) => setProfileData({...profileData, name: e.target.value})} className="w-full bg-slate-800 text-white rounded p-2" placeholder="Name" />
+                      <select value={profileData.profession} onChange={(e) => setProfileData({...profileData, profession: e.target.value})} className="w-full bg-slate-800 text-white rounded p-2">
+                        <option value="Plumber">Plumber</option>
+                        <option value="Electrician">Electrician</option>
+                        <option value="Carpenter">Carpenter</option>
+                        <option value="Maid">Maid</option>
+                        <option value="Painter">Painter</option>
+                        <option value="Other">Other</option>
+                      </select>
+                      <button onClick={() => setIsEditingProfile(false)} className="px-6 py-2 bg-green-600 text-white rounded-xl">Save</button>
                     </div>
-                    <div className="text-center md:text-left border-r border-slate-800 pr-6">
-                      <p className="text-slate-500 text-[10px] font-black uppercase mb-1">Exp</p>
-                      <p className="text-xl font-black text-white">5 Yrs</p>
-                    </div>
-                    <div className="text-center md:text-left">
-                      <p className="text-slate-500 text-[10px] font-black uppercase mb-1">Level</p>
-                      <p className="text-xl font-black text-indigo-400">Pro</p>
-                    </div>
-                  </div>
-                  <button className="px-10 py-4 bg-indigo-600 text-white font-black rounded-2xl hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-600/30">
-                    Edit Profile Details
-                  </button>
+                  ) : (
+                    <>
+                      <h2 className="text-4xl font-black mb-4">{profileData.name}</h2>
+                      <div className="flex flex-wrap gap-3 justify-center md:justify-start mb-8">
+                        <span className="px-5 py-2 bg-slate-800 rounded-full text-xs font-black text-indigo-300 border border-slate-700">
+                          {profileData.profession}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-3 gap-6 mb-8 max-w-md mx-auto md:mx-0">
+                        <div className="text-center md:text-left border-r border-slate-800 pr-6">
+                          <p className="text-slate-500 text-[10px] font-black uppercase mb-1">Rating</p>
+                          <p className="text-xl font-black text-yellow-500">4.9/5</p>
+                        </div>
+                        <div className="text-center md:text-left border-r border-slate-800 pr-6">
+                          <p className="text-slate-500 text-[10px] font-black uppercase mb-1">Exp</p>
+                          <p className="text-xl font-black text-white">{profileData.experience}</p>
+                        </div>
+                        <div className="text-center md:text-left">
+                          <p className="text-slate-500 text-[10px] font-black uppercase mb-1">Level</p>
+                          <p className="text-xl font-black text-indigo-400">Pro</p>
+                        </div>
+                      </div>
+                      <button onClick={() => setIsEditingProfile(true)} className="px-10 py-4 bg-indigo-600 text-white font-black rounded-2xl hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-600/30">
+                        Edit Profile Details
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -251,7 +286,7 @@ const Worker = () => {
                 <p className="text-slate-400 font-medium mb-10 leading-relaxed">You'll need to log back in to access your jobs and earnings dashboard.</p>
                 <div className="flex gap-4">
                   <button onClick={() => setActiveTab('My Jobs')} className="flex-1 py-4 bg-slate-900 border border-slate-800 rounded-2xl font-bold hover:bg-slate-800 transition-all">Cancel</button>
-                  <button className="flex-1 py-4 bg-red-600 text-white rounded-2xl font-black hover:bg-red-700 transition-all shadow-lg shadow-red-600/20">Confirm</button>
+                  <button onClick={() => { logout(); navigate("/login"); }} className="flex-1 py-4 bg-red-600 text-white rounded-2xl font-black hover:bg-red-700 transition-all shadow-lg shadow-red-600/20">Confirm</button>
                 </div>
              </div>
           </div>

@@ -16,10 +16,10 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-white shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
 
-        <div className="flex justify-between items-center py-3">
-          <div className="flex flex-col">
+        <div className="flex justify-between items-center py-3 cursor-pointer">
+          <div className="flex flex-col cursor-pointer">
             <span className="text-xl font-bold text-gray-900">
               Local <span className="text-blue-600">Worker</span>
             </span>
@@ -29,7 +29,6 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-8">
-
             {navLinks.map((link) => (
               <Link
                 key={link.id}
@@ -47,11 +46,10 @@ const Navbar = () => {
 
           </div>
 
-          <div className="hidden md:flex items-center space-x-4">
-
+          <div className="hidden md:flex items-center space-x-4 cursor-pointer">
             <Link
               to="/login"
-              className="flex items-center space-x-2 text-gray-700 hover:text-blue-600"
+              className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 cursor-pointer"
             >
               <User size={18} />
               <span>Login</span>
@@ -60,7 +58,7 @@ const Navbar = () => {
             <div className="relative">
               <button
                 onClick={() => setShowSignup(!showSignup)}
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
+                className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition cursor-pointer"
               >
                 Sign Up ▼
               </button>
@@ -85,7 +83,6 @@ const Navbar = () => {
               )}
             </div>
           </div>
-
         </div>
 
         {isOpen && (
@@ -112,7 +109,7 @@ const Navbar = () => {
                 Login
               </Link>
               <div className="flex flex-col">
-                <span className="font-semibold">Sign Up</span>
+                <span className="font-semibold cursor-pointer">Sign Up</span>
                 <Link
                   to="/userlogin"
                   onClick={() => setIsOpen(false)}

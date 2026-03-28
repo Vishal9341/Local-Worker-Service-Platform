@@ -8,7 +8,7 @@ const Worker = () => {
 
   useEffect(() => {
     if (!loading && (!user || user.role !== 'worker')) {
-      navigate('/login');
+      navigate('/');
     }
   }, [user, loading, navigate]);
 
@@ -286,7 +286,7 @@ const Worker = () => {
                 <p className="text-slate-400 font-medium mb-10 leading-relaxed">You'll need to log back in to access your jobs and earnings dashboard.</p>
                 <div className="flex gap-4">
                   <button onClick={() => setActiveTab('My Jobs')} className="flex-1 py-4 bg-slate-900 border border-slate-800 rounded-2xl font-bold hover:bg-slate-800 transition-all">Cancel</button>
-                  <button onClick={() => { logout(); navigate("/login"); }} className="flex-1 py-4 bg-red-600 text-white rounded-2xl font-black hover:bg-red-700 transition-all shadow-lg shadow-red-600/20">Confirm</button>
+                  <button onClick={() => { logout(); navigate("/"); }} className="flex-1 py-4 bg-red-600 text-white rounded-2xl font-black hover:bg-red-700 transition-all shadow-lg shadow-red-600/20">Confirm</button>
                 </div>
              </div>
           </div>

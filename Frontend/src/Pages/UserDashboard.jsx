@@ -9,7 +9,7 @@ const UserDashboard = () => {
   useEffect(() => {
     // If not logged in, or if the role isn't 'user', redirect them
     if (!loading && (!user || user.role !== 'user')) {
-      navigate('/login');
+      navigate('/');
     }
   }, [user, loading, navigate]);
 
@@ -49,7 +49,7 @@ const UserDashboard = () => {
                   onClick={() => {
                     if (tab === 'Logout') {
                       logout();
-                      navigate('/login');
+                      navigate('/');
                     } else {
                       setActiveTab(tab);
                     }

@@ -40,7 +40,7 @@ const SignUp = () => {
       if (data.role === 'worker') {
         navigate('/worker');
       } else {
-        navigate('/'); // Redirect user to home
+        navigate('/user-dashboard'); 
       }
     } catch (err) {
       setError(err.message);

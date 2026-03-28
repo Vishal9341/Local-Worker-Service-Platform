@@ -1,6 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const Professional = () => {
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -16,10 +23,40 @@ const Professional = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    alert("Details Submitted Successfully!");
+    setError("");
+    setLoading(true);
+
+    try {
+      const payload = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.Password,
+        phone: formData.phone,
+        address: formData.address,
+        profession: formData.profession,
+        role: "worker"
+      };
+
+      const res = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Registration failed');
+      
+      alert("Professional Registered Successfully!");
+      
+      login(data);
+      navigate('/worker'); 
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -32,7 +69,7 @@ const Professional = () => {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-
+          {error && <div className="p-3 bg-red-100 text-red-700 rounded-lg text-sm">{error}</div>}
           
           <div>
             <label className="block text-sm font-medium mb-1">
@@ -134,12 +171,12 @@ const Professional = () => {
             </select>
           </div>
 
-          
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition"
+            disabled={loading}
+            className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition disabled:opacity-70"
           >
-            Register
+            {loading ? "Registering..." : "Register"}
           </button>
 
         </form>

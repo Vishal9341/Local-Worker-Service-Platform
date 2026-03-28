@@ -1,12 +1,25 @@
-import React, { useState } from "react";
-import { Menu, X, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Menu, X, User, LogOut, LayoutDashboard } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const Navbar = () => {
+  const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [activeLink, setActiveLink] = useState("home");
   const [showSignup, setShowSignup] = useState(false); 
 
+  const handleLogout = async () => {
+    await logout();
+    navigate("/");
+  };
+
+  const getDashboardPath = () => {
+    if (user?.role === 'admin') return "/admin-dashboard";
+    if (user?.role === 'worker') return "/worker";
+    return "/user-dashboard";
+  };
   const navLinks = [
     { id: "home", label: "Home", path: "/" },
     { id: "services", label: "Services", path: "/services" },
@@ -47,41 +60,34 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-4 cursor-pointer">
-            <Link
-              to="/login"
-              className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 cursor-pointer"
-            >
-              <User size={18} />
-              <span>Login</span>
-            </Link>
-
-            <div className="relative">
-              <button
-                onClick={() => setShowSignup(!showSignup)}
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition cursor-pointer"
-              >
-                Sign Up ▼
-              </button>
-
-              {showSignup && (
-                <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-lg border">
-                  <Link
-                    to="/User"
-                    className="block px-4 py-2 hover:bg-gray-100"
-                    onClick={() => setShowSignup(false)}
-                  >
-                    User
-                  </Link>
-                  <Link
-                    to="/Professional"
-                    className="block px-4 py-2 hover:bg-gray-100"
-                    onClick={() => setShowSignup(false)}
-                  >
-                    Professional
-                  </Link>
-                </div>
-              )}
-            </div>
+            {user ? (
+              <>
+                <Link
+                  to={getDashboardPath()}
+                  className="flex items-center space-x-2 text-blue-600 font-semibold hover:text-blue-700 transition"
+                >
+                  <LayoutDashboard size={18} />
+                  <span>Dashboard</span>
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center space-x-2 text-red-600 font-semibold hover:text-red-700 transition ml-4"
+                >
+                  <LogOut size={18} />
+                  <span>Logout</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 cursor-pointer"
+                >
+                  <User size={18} />
+                  <span>Login</span>
+                </Link>
+              </>
+            )}
           </div>
         </div>
 

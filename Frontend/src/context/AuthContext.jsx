@@ -20,9 +20,22 @@ export const AuthProvider = ({ children }) => {
     setUser(userData);
   };
 
-  const logout = () => {
-    localStorage.removeItem('user');
-    setUser(null);
+  const logout = async () => {
+    try {
+      if (user && user.token) {
+        await fetch('http://localhost:5000/api/auth/delete-me', {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${user.token}`,
+          },
+        });
+      }
+    } catch (err) {
+      console.error('Error deleting user on logout:', err);
+    } finally {
+      localStorage.removeItem('user');
+      setUser(null);
+    }
   };
 
   return (

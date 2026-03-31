@@ -17,21 +17,26 @@ const Worker = () => {
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [profileData, setProfileData] = useState({
     name: user?.name || "Professional",
+    email: user?.email || "worker@example.com",
+    contactNo: user?.phone || "+1 234 567 890",
     profession: user?.profession || "Plumber",
-    experience: "5 Yrs"
+    experience: "5 Yrs",
+    hourlyRate: "$25/hr",
+    location: "New York, USA",
+    bio: "Experienced professional dedicated to top-quality service."
   });
 
   const stats = [
-    { label: 'Total Earnings', value: '$1,250.00', color: 'green' },
-    { label: 'Completed Jobs', value: '48', color: 'blue' },
-    { label: 'Current Rating', value: '4.9', color: 'yellow' },
-    { label: 'Active Jobs', value: '3', color: 'indigo' },
+    { label: 'Total Earnings', value: ' 0', color: 'green' },
+    { label: 'Completed Jobs', value: '0', color: 'blue' },
+    { label: 'Current Rating', value: '0', color: 'yellow' },
+    { label: 'Active Jobs', value: '0', color: 'indigo' },
   ];
 
   const jobs = [
-    { id: 1, title: 'Bathroom Pipe Leakage', customer: 'John Doe', price: '$45', status: 'In Progress', icon: '🔧' },
-    { id: 2, title: 'Full House Cleaning', customer: 'Sarah Smith', price: '$120', status: 'Pending', icon: '🧹' },
-    { id: 3, title: 'AC Filter Replacement', customer: 'Mike Johnson', price: '$60', status: 'Completed', icon: '❄️' },
+    { id: 1, title: 'Bathroom Pipe Leakage', customer: 'Shubham', price: '450', status: 'In Progress', icon: '🔧' },
+    { id: 2, title: 'Full House Cleaning', customer: 'Ankit', price: '1200', status: 'Pending', icon: '🧹' },
+    { id: 3, title: 'AC Filter Replacement', customer: 'Abhishek', price: '600', status: 'Completed', icon: '❄️' },
   ];
 
   const availableJobs = [
@@ -82,7 +87,7 @@ const Worker = () => {
         <div className="p-4 border-t border-slate-800">
           <div className="flex items-center gap-3 px-2 py-2">
             <div className="w-10 h-10 rounded-full bg-slate-800 border-2 border-green-500 p-0.5">
-               <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Profile" className="rounded-full" />
+               <img src=" https://plus.unsplash.com/premium_photo-1683972509783-da5a74795bb3?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8UHJvZmlsZSUyMGljb258ZW58MHx8MHx8fDA%3D" alt="Profile" className="rounded-full" />
             </div>
             {isSidebarOpen && (
               <div className="overflow-hidden">
@@ -124,7 +129,7 @@ const Worker = () => {
 
         {activeTab === 'My Jobs' && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {/* Stats Overview */}
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
               {stats.map((stat) => (
                 <div key={stat.label} className="bg-slate-900/50 border border-slate-800 p-6 rounded-3xl hover:-translate-y-1 transition-all duration-300">
@@ -134,7 +139,6 @@ const Worker = () => {
               ))}
             </div>
 
-            {/* Job Lists */}
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-10">
               <div className="xl:col-span-2">
                 <div className="flex items-center justify-between mb-8">
@@ -165,7 +169,6 @@ const Worker = () => {
                 </div>
               </div>
 
-              {/* Earnings Overview - New Feature */}
               <div className="bg-slate-900/40 border border-slate-800 rounded-[2.5rem] p-8 flex flex-col">
                 <h2 className="text-xl font-bold mb-8">Earnings Overview</h2>
                 <div className="flex-1 flex items-end gap-3 h-48 mb-8">
@@ -192,7 +195,6 @@ const Worker = () => {
           </div>
         )}
 
-        {/* Accept Job Section */}
         {activeTab === 'Accept Job' && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             <h2 className="text-3xl font-black mb-10 tracking-tight">Available Jobs Marketplace</h2>
@@ -228,48 +230,92 @@ const Worker = () => {
               <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
               <div className="flex flex-col md:flex-row gap-10 items-center md:items-start relative z-10">
                 <div className="w-40 h-40 rounded-[2.5rem] bg-indigo-600 p-1">
-                   <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Profile Large" className="rounded-[2.4rem] bg-slate-900" />
+                   <img src="https://plus.unsplash.com/premium_photo-1683972509783-da5a74795bb3?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8UHJvZmlsZSUyMGljb258ZW58MHx8MHx8fDA%3D  " alt="Profile Large" className="rounded-[2.4rem] bg-slate-900" />
                 </div>
-                <div className="flex-1 text-center md:text-left">
+                <div className="flex-1 text-center md:text-left w-full max-w-2xl">
                   {isEditingProfile ? (
-                    <div className="space-y-4 mb-6">
-                      <input type="text" value={profileData.name} onChange={(e) => setProfileData({...profileData, name: e.target.value})} className="w-full bg-slate-800 text-white rounded p-2" placeholder="Name" />
-                      <select value={profileData.profession} onChange={(e) => setProfileData({...profileData, profession: e.target.value})} className="w-full bg-slate-800 text-white rounded p-2">
-                        <option value="Plumber">Plumber</option>
-                        <option value="Electrician">Electrician</option>
-                        <option value="Carpenter">Carpenter</option>
-                        <option value="Maid">Maid</option>
-                        <option value="Painter">Painter</option>
-                        <option value="Other">Other</option>
-                      </select>
-                      <button onClick={() => setIsEditingProfile(false)} className="px-6 py-2 bg-green-600 text-white rounded-xl">Save</button>
+                    <div className="space-y-4 w-full">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                        <div>
+                          <label className="text-xs text-slate-400 font-bold uppercase">Full Name</label>
+                          <input type="text" value={profileData.name} onChange={(e) => setProfileData({...profileData, name: e.target.value})} className="w-full bg-slate-800 text-white rounded-xl p-3 mt-1 outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Name" />
+                        </div>
+                        <div>
+                          <label className="text-xs text-slate-400 font-bold uppercase">Profession</label>
+                          <input type="text" value={profileData.profession} onChange={(e) => setProfileData({...profileData, profession: e.target.value})} className="w-full bg-slate-800 text-white rounded-xl p-3 mt-1 outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Profession" />
+                        </div>
+                        <div>
+                          <label className="text-xs text-slate-400 font-bold uppercase">Email Address</label>
+                          <input type="email" value={profileData.email} onChange={(e) => setProfileData({...profileData, email: e.target.value})} className="w-full bg-slate-800 text-white rounded-xl p-3 mt-1 outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Email" />
+                        </div>
+                        <div>
+                          <label className="text-xs text-slate-400 font-bold uppercase">Contact No</label>
+                          <input type="text" value={profileData.contactNo} onChange={(e) => setProfileData({...profileData, contactNo: e.target.value})} className="w-full bg-slate-800 text-white rounded-xl p-3 mt-1 outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Contact No" />
+                        </div>
+                        <div>
+                          <label className="text-xs text-slate-400 font-bold uppercase">Experience</label>
+                          <input type="text" value={profileData.experience} onChange={(e) => setProfileData({...profileData, experience: e.target.value})} className="w-full bg-slate-800 text-white rounded-xl p-3 mt-1 outline-none focus:ring-2 focus:ring-indigo-500" placeholder="e.g., 5 Yrs" />
+                        </div>
+                        <div>
+                          <label className="text-xs text-slate-400 font-bold uppercase">Hourly Rate</label>
+                          <input type="text" value={profileData.hourlyRate} onChange={(e) => setProfileData({...profileData, hourlyRate: e.target.value})} className="w-full bg-slate-800 text-white rounded-xl p-3 mt-1 outline-none focus:ring-2 focus:ring-indigo-500" placeholder="e.g., $25/hr" />
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="text-xs text-slate-400 font-bold uppercase">Location</label>
+                          <input type="text" value={profileData.location} onChange={(e) => setProfileData({...profileData, location: e.target.value})} className="w-full bg-slate-800 text-white rounded-xl p-3 mt-1 outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Location" />
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="text-xs text-slate-400 font-bold uppercase">Bio / About</label>
+                          <textarea value={profileData.bio} onChange={(e) => setProfileData({...profileData, bio: e.target.value})} className="w-full bg-slate-800 text-white rounded-xl p-3 mt-1 h-24 resize-none outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tell us about your services..." />
+                        </div>
+                      </div>
+                      <div className="flex gap-3 justify-end mt-6">
+                        <button onClick={() => setIsEditingProfile(false)} className="px-6 py-3 bg-slate-800 text-white rounded-xl font-bold hover:bg-slate-700 transition-all">Cancel</button>
+                        <button onClick={() => setIsEditingProfile(false)} className="px-8 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/30">Save Profile</button>
+                      </div>
                     </div>
                   ) : (
-                    <>
-                      <h2 className="text-4xl font-black mb-4">{profileData.name}</h2>
-                      <div className="flex flex-wrap gap-3 justify-center md:justify-start mb-8">
-                        <span className="px-5 py-2 bg-slate-800 rounded-full text-xs font-black text-indigo-300 border border-slate-700">
-                          {profileData.profession}
-                        </span>
-                      </div>
-                      <div className="grid grid-cols-3 gap-6 mb-8 max-w-md mx-auto md:mx-0">
-                        <div className="text-center md:text-left border-r border-slate-800 pr-6">
-                          <p className="text-slate-500 text-[10px] font-black uppercase mb-1">Rating</p>
-                          <p className="text-xl font-black text-yellow-500">4.9/5</p>
+                    <div className="w-full text-left">
+                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-2 gap-4">
+                        <div>
+                          <h2 className="text-4xl font-black">{profileData.name}</h2>
+                          <p className="text-xl font-bold text-indigo-400 mt-1">{profileData.profession}</p>
                         </div>
-                        <div className="text-center md:text-left border-r border-slate-800 pr-6">
-                          <p className="text-slate-500 text-[10px] font-black uppercase mb-1">Exp</p>
+                        <button onClick={() => setIsEditingProfile(true)} className="px-6 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl transition-all font-bold text-white flex items-center gap-2">
+                          <span>✏️</span> Edit Profile
+                        </button>
+                      </div>
+                      
+                      <div className="flex flex-wrap gap-3 mb-6 mt-6">
+                        <span className="px-4 py-2 bg-slate-800/80 rounded-full text-xs font-bold text-slate-300 flex items-center gap-2 border border-slate-700"><span>📍</span> {profileData.location}</span>
+                        <span className="px-4 py-2 bg-slate-800/80 rounded-full text-xs font-bold text-slate-300 flex items-center gap-2 border border-slate-700"><span>✉️</span> {profileData.email}</span>
+                        <span className="px-4 py-2 bg-slate-800/80 rounded-full text-xs font-bold text-slate-300 flex items-center gap-2 border border-slate-700"><span>📞</span> {profileData.contactNo}</span>
+                      </div>
+
+                      <div className="mb-8 items-start justify-start flex flex-col items-start w-full gap-2">
+                        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">About</h3>
+                        <p className="text-slate-300 leading-relaxed text-sm text-left">{profileData.bio}</p>
+                      </div>
+
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="bg-slate-800/50 p-5 rounded-2xl border border-slate-700/50 flex flex-col items-center justify-center">
+                          <p className="text-slate-500 text-[10px] font-black uppercase mb-2">Rating</p>
+                          <p className="text-2xl font-black text-yellow-500">4.8</p>
+                        </div>
+                        <div className="bg-slate-800/50 p-5 rounded-2xl border border-slate-700/50 flex flex-col items-center justify-center">
+                          <p className="text-slate-500 text-[10px] font-black uppercase mb-2">Experience</p>
                           <p className="text-xl font-black text-white">{profileData.experience}</p>
                         </div>
-                        <div className="text-center md:text-left">
-                          <p className="text-slate-500 text-[10px] font-black uppercase mb-1">Level</p>
-                          <p className="text-xl font-black text-indigo-400">Pro</p>
+                        <div className="bg-slate-800/50 p-5 rounded-2xl border border-slate-700/50 flex flex-col items-center justify-center">
+                          <p className="text-slate-500 text-[10px] font-black uppercase mb-2">Rate</p>
+                          <p className="text-xl font-black text-green-400">{profileData.hourlyRate}</p>
+                        </div>
+                        <div className="bg-slate-800/50 p-5 rounded-2xl border border-slate-700/50 flex flex-col items-center justify-center">
+                          <p className="text-slate-500 text-[10px] font-black uppercase mb-2">Jobs Done</p>
+                          <p className="text-2xl font-black text-indigo-400">124</p>
                         </div>
                       </div>
-                      <button onClick={() => setIsEditingProfile(true)} className="px-10 py-4 bg-indigo-600 text-white font-black rounded-2xl hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-600/30">
-                        Edit Profile Details
-                      </button>
-                    </>
+                    </div>
                   )}
                 </div>
               </div>

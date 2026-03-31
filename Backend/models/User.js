@@ -28,6 +28,12 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'worker', 'admin'],
     default: 'user',
   },
+  resetPasswordOTP: {
+    type: String,
+  },
+  resetPasswordExpires: {
+    type: Date,
+  },
   // Worker specific fields can be added above or kept in a separate model linked here
 }, { timestamps: true });
 

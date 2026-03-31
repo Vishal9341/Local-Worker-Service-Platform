@@ -17,8 +17,6 @@ const ServiceHero = () => {
                 Quality work, guaranteed!
               </span>
               <br></br>
-            
-              
             </p>
 
 </div>
@@ -44,39 +42,6 @@ const ServiceHero = () => {
           </div>
         </motion.div>
       </div>
-
-      {/* New Login Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-gray-100 bg-slate-50 rounded-[3rem] my-12">
-        <div className="max-w-md mx-auto">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-black text-gray-900 mb-2">Login to your panel</h2>
-            <p className="text-gray-500 font-medium">Access your dashboard directly from here.</p>
-          </div>
-          <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); window.location.href='/login'; }}>
-            <div>
-              <input 
-                type="email" 
-                placeholder="Email Address" 
-                className="w-full px-6 py-4 bg-white border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-100 transition-all font-medium"
-              />
-            </div>
-            <div>
-              <input 
-                type="password" 
-                placeholder="Password" 
-                className="w-full px-6 py-4 bg-white border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-100 transition-all font-medium"
-              />
-            </div>
-            <button 
-              type="submit"
-              className="w-full py-4 bg-gray-900 text-white font-bold rounded-2xl hover:bg-gray-800 transition-all shadow-xl shadow-gray-200 transform active:scale-95"
-            >
-              Go to Login Page
-            </button>
-            <p className="text-center text-sm text-gray-400 mt-4 font-medium italic">Note: For full security, actual login happens on the secure login page.</p>
-          </form>
-        </div>
-      </section>
 
       {/* New Join Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-gray-100">

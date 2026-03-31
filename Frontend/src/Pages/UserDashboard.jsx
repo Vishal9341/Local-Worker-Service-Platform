@@ -30,7 +30,7 @@ const UserDashboard = () => {
     { id: 2, service: 'Electrical Wiring', worker: 'Pending', date: 'Next Tuesday', status: 'Searching' }
   ];
 
-  const categories = ['Plumbers', 'Electricians', 'Cleaners', 'Carpenters', 'Painters', 'HVAC'];
+  const categories = ['Plumbers', 'Electricians', 'Cleaners', 'Carpenters', 'Painters', 'Maid'];
   const filteredCategories = categories.filter(c => c.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
@@ -49,7 +49,7 @@ const UserDashboard = () => {
                   onClick={() => {
                     if (tab === 'Logout') {
                       logout();
-                      navigate('/');
+                      navigate('/App');
                     } else {
                       setActiveTab(tab);
                     }
@@ -78,7 +78,7 @@ const UserDashboard = () => {
 
         {activeTab === 'Find Workers' && (
           <div className="animate-in fade-in duration-500">
-            <div className="mb-10 p-8 bg-indigo-600 rounded-3xl text-white shadow-xl shadow-indigo-200 relative overflow-hidden">
+            <div className="mb-10 p-8  rounded-3xl text-white shadow-xl shadow-indigo-200 relative overflow-hidden">
                <div className="relative z-10">
                  <h2 className="text-2xl font-bold mb-4">What service do you need today?</h2>
                  <div className="flex gap-2 max-w-xl">

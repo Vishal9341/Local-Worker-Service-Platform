@@ -13,7 +13,6 @@ const AdminDashboard = () => {
   }, [user, loading, navigate]);
 
   const [activeTab, setActiveTab] = useState('Overview');
-
   const stats = [
     { label: 'Total Users', value: '124', icon: '👥' },
     { label: 'Active Professionals', value: '45', icon: '🛠️' },
@@ -22,9 +21,9 @@ const AdminDashboard = () => {
   ];
 
   const recentUsers = [
-    { id: 1, name: 'Arpit', email: 'arpit@example.com', role: 'user', joined: '2026-03-27' },
-    { id: 2, name: 'Vikram', email: 'vk@gmail.com', role: 'worker', joined: '2026-03-27' },
-    { id: 3, name: 'Vishal', email: 'vishal@gmail.com', role: 'admin', joined: '2026-03-26' },
+    { id: 1, name: ' ', email: 'arpit@example.com', role: 'user', joined: '2026-03-27' },
+    { id: 2, name: ' ', email: 'vk@gmail.com', role: 'worker', joined: '2026-03-27' },
+    { id: 3, name: ' ', email: 'vishal@gmail.com', role: 'admin', joined: '2026-03-26' },
   ];
 
   if (loading || !user) return <div className="min-h-screen pt-[72px] bg-slate-50 flex items-center justify-center">Loading Admin Panel...</div>;

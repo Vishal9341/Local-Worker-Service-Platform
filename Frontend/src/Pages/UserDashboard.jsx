@@ -7,7 +7,6 @@ const UserDashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // If not logged in, or if the role isn't 'user', redirect them
     if (!loading && (!user || user.role !== 'user')) {
       navigate('/');
     }
@@ -24,13 +23,12 @@ const UserDashboard = () => {
   });
 
   if (loading || !user) return <div className="min-h-screen pt-[72px] bg-slate-50 flex items-center justify-center">Loading...</div>;
-
   const activeBookings = [
     { id: 1, service: 'Plumbing Repair', worker: 'Alice Smith', date: 'Tomorrow, 10:00 AM', status: 'Confirmed' },
     { id: 2, service: 'Electrical Wiring', worker: 'Pending', date: 'Next Tuesday', status: 'Searching' }
   ];
 
-  const categories = ['Plumbers', 'Electricians', 'Cleaners', 'Carpenters', 'Painters', 'Maid'];
+  const categories = ['Plumbers', 'Electricians', 'Cleaners', 'Carpenters', 'Painters', 'Maid','Barber',];
   const filteredCategories = categories.filter(c => c.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
@@ -49,7 +47,7 @@ const UserDashboard = () => {
                   onClick={() => {
                     if (tab === 'Logout') {
                       logout();
-                      navigate('/App');
+                      navigate('/App.jsx');
                     } else {
                       setActiveTab(tab);
                     }

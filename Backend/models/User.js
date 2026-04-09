@@ -20,6 +20,18 @@ const userSchema = new mongoose.Schema({
   address: {
     type: String,
   },
+  // GeoJSON Point for proximity search (Mongo expects [lng, lat])
+  location: {
+    type: {
+      type: String,
+      enum: ['Point'],
+      default: 'Point',
+    },
+    coordinates: {
+      type: [Number],
+      default: undefined, // keep undefined until user sets it
+    },
+  },
   profession: {
     type: String,
   },
@@ -27,6 +39,17 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['user', 'worker', 'admin'],
     default: 'user',
+  },
+  // Worker availability (simple on/off + optional window)
+  isAvailable: {
+    type: Boolean,
+    default: true,
+  },
+  availableFrom: {
+    type: Date,
+  },
+  availableTo: {
+    type: Date,
   },
   resetPasswordOTP: {
     type: String,
@@ -36,5 +59,8 @@ const userSchema = new mongoose.Schema({
   },
   // Worker specific fields can be added above or kept in a separate model linked here
 }, { timestamps: true });
+
+// Helps $near queries for matching workers
+userSchema.index({ location: '2dsphere' });
 
 module.exports = mongoose.model('User', userSchema);

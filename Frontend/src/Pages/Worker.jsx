@@ -15,6 +15,10 @@ const Worker = () => {
   const [activeTab, setActiveTab] = useState('My Jobs');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [isAvailable, setIsAvailable] = useState(true);
+  const [jobs, setJobs] = useState([]);
+  const [loadingJobs, setLoadingJobs] = useState(false);
+  const [geo, setGeo] = useState({ lat: null, lng: null, status: 'idle' });
   const [profileData, setProfileData] = useState({
     name: user?.name || "Professional",
     email: user?.email || "worker@example.com",
@@ -26,6 +30,109 @@ const Worker = () => {
     bio: "Experienced professional dedicated to top-quality service."
   });
 
+  useEffect(() => {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => setGeo({ lat: pos.coords.latitude, lng: pos.coords.longitude, status: 'ok' }),
+      (err) => setGeo((g) => ({ ...g, status: err?.code === 1 ? 'denied' : 'error' })),
+      { enableHighAccuracy: true, timeout: 8000 }
+    );
+  }, []);
+
+  const updateAvailability = async (next) => {
+    if (!user?.token) return;
+    try {
+      const res = await fetch('http://localhost:5000/api/workers/me/availability', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({
+          isAvailable: next,
+          lat: geo.status === 'ok' ? geo.lat : undefined,
+          lng: geo.status === 'ok' ? geo.lng : undefined,
+        }),
+      });
+      const data = await res.json();
+      if (!data.success) {
+        alert(data.message || 'Failed to update availability');
+        return;
+      }
+      setIsAvailable(Boolean(data.data?.isAvailable));
+    } catch (e) {
+      console.error('Error updating availability', e);
+      alert('Failed to update availability');
+    }
+  };
+
+  const fetchMyJobs = async () => {
+    if (!user?.token) return;
+    setLoadingJobs(true);
+    try {
+      const res = await fetch('http://localhost:5000/api/bookings/mine', {
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
+      const data = await res.json();
+      if (data.success) setJobs(data.data);
+      else setJobs([]);
+    } catch (e) {
+      console.error('Error fetching jobs', e);
+      setJobs([]);
+    } finally {
+      setLoadingJobs(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'My Jobs') fetchMyJobs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
+
+  const completeJob = async (bookingId) => {
+    if (!user?.token) return;
+    try {
+      const res = await fetch(`http://localhost:5000/api/bookings/${bookingId}/complete`, {
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
+      const data = await res.json();
+      if (!data.success) {
+        alert(data.message || 'Failed to complete job');
+        return;
+      }
+      setIsAvailable(true);
+      fetchMyJobs();
+    } catch (e) {
+      console.error('Error completing job', e);
+      alert('Failed to complete job');
+    }
+  };
+
+  const cancelJob = async (bookingId) => {
+    if (!user?.token) return;
+    try {
+      const res = await fetch(`http://localhost:5000/api/bookings/${bookingId}/cancel`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({ reason: 'Cancelled by worker' }),
+      });
+      const data = await res.json();
+      if (!data.success) {
+        alert(data.message || 'Failed to cancel job');
+        return;
+      }
+      setIsAvailable(true);
+      fetchMyJobs();
+    } catch (e) {
+      console.error('Error cancelling job', e);
+      alert('Failed to cancel job');
+    }
+  };
+
   const stats = [
     { label: 'Total Earnings', value: ' 0', color: 'green' },
     { label: 'Completed Jobs', value: '0', color: 'blue' },
@@ -33,11 +140,7 @@ const Worker = () => {
     { label: 'Active Jobs', value: '0', color: 'indigo' },
   ];
 
-  const jobs = [
-    { id: 1, title: 'Bathroom Pipe Leakage', customer: 'Shubham', price: '450', status: 'In Progress', icon: '🔧' },
-    { id: 2, title: 'Full House Cleaning', customer: 'Ankit', price: '1200', status: 'Pending', icon: '🧹' },
-    { id: 3, title: 'AC Filter Replacement', customer: 'Abhishek', price: '600', status: 'Completed', icon: '❄️' },
-  ];
+  // jobs are fetched from backend bookings
 
   const availableJobs = [
     { id: 101, title: 'Emergency Electrical Fix', category: 'Electrician', location: '2.5 miles away', price: '$85', urgency: 'High' },
@@ -112,6 +215,16 @@ const Worker = () => {
           </div>
           
           <div className="flex items-center gap-4">
+            <button
+              onClick={() => updateAvailability(!isAvailable)}
+              className={`px-4 py-3 rounded-2xl font-bold border transition-all ${
+                isAvailable
+                  ? 'bg-green-500/10 text-green-300 border-green-500/20 hover:bg-green-500/15'
+                  : 'bg-red-500/10 text-red-300 border-red-500/20 hover:bg-red-500/15'
+              }`}
+            >
+              {isAvailable ? 'Available' : 'Unavailable'}
+            </button>
             <div className="relative group">
               <input 
                 type="text" 
@@ -146,26 +259,49 @@ const Worker = () => {
                   <button className="text-indigo-400 font-bold hover:underline">View All</button>
                 </div>
                 <div className="space-y-4">
-                  {jobs.map((job) => (
-                    <div key={job.id} className="group relative bg-slate-900/50 border border-slate-800 rounded-3xl p-6 hover:bg-slate-800/80 transition-all">
-                      <div className="flex items-center gap-6">
-                        <div className="p-4 bg-slate-800 rounded-2xl text-2xl group-hover:scale-110 transition-transform">{job.icon}</div>
-                        <div className="flex-1">
-                          <h3 className="text-lg font-bold mb-1">{job.title}</h3>
-                          <p className="text-slate-400 text-sm">{job.customer}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-lg font-black text-indigo-400 mb-1">{job.price}</p>
-                          <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
-                             job.status === 'In Progress' ? 'bg-indigo-500/20 text-indigo-400' : 
-                             job.status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400'
-                          }`}>
-                            {job.status}
-                          </span>
+                  {loadingJobs ? (
+                    <div className="text-slate-400">Loading jobs...</div>
+                  ) : jobs.length > 0 ? (
+                    jobs.map((job) => (
+                      <div key={job._id} className="group relative bg-slate-900/50 border border-slate-800 rounded-3xl p-6 hover:bg-slate-800/80 transition-all">
+                        <div className="flex items-center gap-6">
+                          <div className="p-4 bg-slate-800 rounded-2xl text-2xl group-hover:scale-110 transition-transform">📋</div>
+                          <div className="flex-1">
+                            <h3 className="text-lg font-bold mb-1">{job.profession || 'Job'}</h3>
+                            <p className="text-slate-400 text-sm">{job.user?.name || 'Customer'}</p>
+                            <p className="text-slate-500 text-xs mt-1">📍 {job.address || 'Address'}</p>
+                          </div>
+                          <div className="text-right flex flex-col items-end gap-2">
+                            <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
+                              job.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' :
+                              job.status === 'completed' ? 'bg-green-500/20 text-green-400' :
+                              'bg-red-500/20 text-red-400'
+                            }`}>
+                              {job.status}
+                            </span>
+                            {job.status === 'pending' && (
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => cancelJob(job._id)}
+                                  className="px-3 py-2 rounded-xl bg-red-600 text-white font-bold text-xs hover:bg-red-700"
+                                >
+                                  Cancel
+                                </button>
+                                <button
+                                  onClick={() => completeJob(job._id)}
+                                  className="px-3 py-2 rounded-xl bg-green-600 text-white font-bold text-xs hover:bg-green-700"
+                                >
+                                  Complete
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  ) : (
+                    <div className="text-slate-400">No jobs yet.</div>
+                  )}
                 </div>
               </div>
 

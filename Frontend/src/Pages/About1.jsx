@@ -101,7 +101,6 @@ const About = () => {
               No need to search offline for services.
             </p>
           </div>
-
           <div className="p-6 bg-indigo-50 rounded-xl">
             <h3 className="font-semibold mb-2">Reliable Services</h3>
             <p className="text-gray-600 text-sm">

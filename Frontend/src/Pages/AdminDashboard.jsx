@@ -5,7 +5,6 @@ import { AuthContext } from "../context/AuthContext";
 const AdminDashboard = () => {
   const { user, logout, loading } = useContext(AuthContext);
   const navigate = useNavigate();
-
   useEffect(() => {
     if (!loading && (!user || user.role !== 'admin')) {
       navigate('/');
@@ -79,7 +78,6 @@ const AdminDashboard = () => {
                 </div>
               ))}
             </div>
-
             <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-200 overflow-hidden">
               <div className="p-8 border-b border-slate-100 flex justify-between items-center">
                 <h3 className="text-xl font-bold text-slate-800">Recent Registrations</h3>

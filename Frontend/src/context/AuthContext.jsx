@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 
     const pingHeartbeat = async () => {
       try {
-        await fetch('http://localhost:5000/api/auth/heartbeat', {
+        await fetch(' https://local-worker-service-platform.onrender.com', {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${user.token}`,

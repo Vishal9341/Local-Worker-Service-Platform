@@ -61,7 +61,7 @@ const UserDashboard = () => {
 
       if (searchLocation && searchLocation.trim() !== '') {
         queryParams.append('location', searchLocation);
-        const response = await fetch(`http://localhost:5000/api/workers?${queryParams}`);
+        const response = await fetch(` https://local-worker-service-platform.onrender.com/api/workers?${queryParams}`);
         const data = await response.json();
         if (data.success) {
           setWorkersList(data.data);
@@ -76,7 +76,7 @@ const UserDashboard = () => {
         queryParams.append('lat', geo.lat);
         queryParams.append('lng', geo.lng);
         queryParams.append('radiusKm', '50'); // 50km radius to show nearby workers
-        const response = await fetch(`http://localhost:5000/api/workers/match?${queryParams}`);
+        const response = await fetch(` https://local-worker-service-platform.onrender.com/api/workers/match?${queryParams}`);
         const data = await response.json();
         if (data.success) {
           setWorkersList(data.data);
@@ -87,7 +87,7 @@ const UserDashboard = () => {
         return;
       }
 
-      const response = await fetch(`http://localhost:5000/api/workers?${queryParams}`);
+      const response = await fetch(` https://local-worker-service-platform.onrender.com/api/workers?${queryParams}`);
       const data = await response.json();
       if (data.success) {
         setWorkersList(data.data);
@@ -107,7 +107,7 @@ const UserDashboard = () => {
     if (!user?.token) return;
     setLoadingBookings(true);
     try {
-      const res = await fetch('http://localhost:5000/api/bookings/mine', {
+      const res = await fetch(' https://local-worker-service-platform.onrender.com/api/bookings/mine', {
         headers: { Authorization: `Bearer ${user.token}` },
       });
       const data = await res.json();
@@ -206,7 +206,7 @@ const UserDashboard = () => {
   const cancelBooking = async (bookingId) => {
     if (!user?.token) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/bookings/${bookingId}/cancel`, {
+      const res = await fetch(`https://local-worker-service-platform.onrender.com/api/bookings/${bookingId}/cancel`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -245,7 +245,7 @@ const UserDashboard = () => {
   const saveProfile = async () => {
     if (!user?.token) return;
     try {
-      const res = await fetch('http://localhost:5000/api/auth/profile', {
+      const res = await fetch(' https://local-worker-service-platform.onrender.com/api/auth/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -33,7 +33,7 @@ const Worker = () => {
   const saveProfile = async () => {
     if (!user?.token) return;
     try {
-      const res = await fetch('http://localhost:5000/api/auth/profile', {
+      const res = await fetch(' https://local-worker-service-platform.onrender.com/api/auth/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ const Worker = () => {
   const updateAvailability = async (next) => {
     if (!user?.token) return;
     try {
-      const res = await fetch('http://localhost:5000/api/workers/me/availability', {
+      const res = await fetch('https://local-worker-service-platform.onrender.com/api/workers/me/availability', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -101,7 +101,7 @@ const Worker = () => {
     if (!user?.token) return;
     setLoadingJobs(true);
     try {
-      const res = await fetch('http://localhost:5000/api/bookings/mine', {
+      const res = await fetch('https://local-worker-service-platform.onrender.com/api/bookings/mine', {
         headers: { Authorization: `Bearer ${user.token}` },
       });
       const data = await res.json();
@@ -123,7 +123,7 @@ const Worker = () => {
   const completeJob = async (bookingId) => {
     if (!user?.token) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/bookings/${bookingId}/complete`, {
+      const res = await fetch(`https://local-worker-service-platform.onrender.com/api/bookings/${bookingId}/complete`, {
         method: 'PATCH',
         headers: { Authorization: `Bearer ${user.token}` },
       });
@@ -143,7 +143,7 @@ const Worker = () => {
   const cancelJob = async (bookingId) => {
     if (!user?.token) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/bookings/${bookingId}/cancel`, {
+      const res = await fetch(` https://local-worker-service-platform.onrender.com/api/bookings/${bookingId}/cancel`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -167,7 +167,7 @@ const Worker = () => {
   const acceptJob = async (bookingId) => {
     if (!user?.token) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/bookings/${bookingId}/accept`, {
+      const res = await fetch(` https://local-worker-service-platform.onrender.com/api/bookings/${bookingId}/accept`, {
         method: 'PATCH',
         headers: { Authorization: `Bearer ${user.token}` },
       });

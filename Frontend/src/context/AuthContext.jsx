@@ -7,39 +7,53 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in
-    const storedUser = localStorage.getItem('user');
+    const storedUser = sessionStorage.getItem('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+    if (!user || !user.token) return;
+
+    const pingHeartbeat = async () => {
+      try {
+        await fetch('http://localhost:5000/api/auth/heartbeat', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        });
+      } catch (err) {
+        console.error('Heartbeat ping failed', err);
+      }
+    };
+
+    // Ping immediately on login, then every 60 seconds
+    pingHeartbeat();
+    const interval = setInterval(pingHeartbeat, 60000);
+    
+    return () => clearInterval(interval);
+  }, [user]);
+
   const login = (userData) => {
-    localStorage.setItem('user', JSON.stringify(userData));
+    sessionStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
   };
 
-  const logout = async () => {
-    try {
-      if (user && user.token) {
-        await fetch('http://localhost:5000/api/auth/delete-me', {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${user.token}`,
-          },
-        });
-      }
-    } catch (err) {
-      console.error('Error deleting user on logout:', err);
-    } finally {
-      localStorage.removeItem('user');
-      setUser(null);
-    }
+  const logout = () => {
+    sessionStorage.removeItem('user');
+    setUser(null);
+  };
+
+  const updateUser = (updatedData) => {
+    sessionStorage.setItem('user', JSON.stringify(updatedData));
+    setUser(updatedData);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, loading, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

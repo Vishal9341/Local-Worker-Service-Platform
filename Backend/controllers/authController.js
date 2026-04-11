@@ -182,6 +182,57 @@ const resetPassword = async (req, res) => {
   }
 };
 
+// @desc    Update user profile
+// @route   PUT /api/auth/profile
+// @access  Private
+const updateProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+      user.name = req.body.name || user.name;
+      user.phone = req.body.phone || user.phone;
+      user.address = req.body.address || user.address;
+      user.profession = req.body.profession || user.profession;
+
+      const updatedUser = await user.save();
+
+      res.json({
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        phone: updatedUser.phone,
+        address: updatedUser.address,
+        profession: updatedUser.profession,
+        role: updatedUser.role,
+        token: req.headers.authorization.split(' ')[1], // Preserve token
+      });
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// @desc    Update last active heartbeat
+// @route   POST /api/auth/heartbeat
+// @access  Private
+const updateHeartbeat = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (user) {
+      user.lastActive = new Date();
+      await user.save();
+      res.status(200).json({ success: true, message: 'Heartbeat updated' });
+    } else {
+      res.status(404).json({ success: false, message: 'User not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
+};
+
 module.exports = {
   register,
   login,
@@ -189,4 +240,6 @@ module.exports = {
   deleteMe,
   forgotPassword,
   resetPassword,
+  updateProfile,
+  updateHeartbeat,
 };

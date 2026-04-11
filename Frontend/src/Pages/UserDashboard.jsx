@@ -1,19 +1,24 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 const UserDashboard = () => {
-  const { user, logout, loading } = useContext(AuthContext);
+  const { user, logout, loading, updateUser } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    if (!loading && (!user || user.role !== 'user')) {
-      navigate('/');
+    if (!loading) {
+      if (!user) {
+        navigate('/login');
+      } else if (user.role !== 'user') {
+        navigate('/');
+      }
     }
   }, [user, loading, navigate]);
 
   const [activeTab, setActiveTab] = useState('Find Workers');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(location.state?.category || '');
   const [locationQuery, setLocationQuery] = useState('');
   const [workersList, setWorkersList] = useState([]);
   const [loadingWorkers, setLoadingWorkers] = useState(false);
@@ -23,7 +28,12 @@ const UserDashboard = () => {
   const [loadingBookings, setLoadingBookings] = useState(false);
 
   useEffect(() => {
-    if (!navigator.geolocation) return;
+    if (!navigator.geolocation) {
+      if (location.state?.category) {
+        fetchWorkers(location.state.category, '');
+      }
+      return;
+    }
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setGeo({ lat: pos.coords.latitude, lng: pos.coords.longitude, status: 'ok' });
@@ -36,16 +46,36 @@ const UserDashboard = () => {
     );
   }, []);
 
-  const fetchWorkers = async (profession, location) => {
+  useEffect(() => {
+    if (geo.status !== 'idle' && location.state?.category) {
+      fetchWorkers(location.state.category, '');
+    }
+  }, [geo.status]);
+
+  const fetchWorkers = async (profession, searchLocation) => {
     setLoadingWorkers(true);
     setHasSearched(true);
     try {
       const queryParams = new URLSearchParams();
       if (profession) queryParams.append('profession', profession);
+
+      if (searchLocation && searchLocation.trim() !== '') {
+        queryParams.append('location', searchLocation);
+        const response = await fetch(`http://localhost:5000/api/workers?${queryParams}`);
+        const data = await response.json();
+        if (data.success) {
+          setWorkersList(data.data);
+        } else {
+          console.error(data.message);
+          setWorkersList([]);
+        }
+        return;
+      }
+
       if (geo.status === 'ok' && geo.lat != null && geo.lng != null) {
         queryParams.append('lat', geo.lat);
         queryParams.append('lng', geo.lng);
-        queryParams.append('radiusKm', '10');
+        queryParams.append('radiusKm', '50'); // 50km radius to show nearby workers
         const response = await fetch(`http://localhost:5000/api/workers/match?${queryParams}`);
         const data = await response.json();
         if (data.success) {
@@ -57,7 +87,6 @@ const UserDashboard = () => {
         return;
       }
 
-      if (location) queryParams.append('location', location);
       const response = await fetch(`http://localhost:5000/api/workers?${queryParams}`);
       const data = await response.json();
       if (data.success) {
@@ -93,12 +122,20 @@ const UserDashboard = () => {
   };
 
   useEffect(() => {
-    if (activeTab === 'My Bookings') fetchMyBookings();
+    if (activeTab === 'My Bookings') {
+      fetchMyBookings();
+      const interval = setInterval(fetchMyBookings, 5000);
+      return () => clearInterval(interval);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
 
   const createBooking = async (worker) => {
-    if (!user?.token) return;
+    if (!user || !user.token) {
+      alert("Please login to book a worker!");
+      navigate('/login');
+      return;
+    }
     try {
       const res = await fetch('http://localhost:5000/api/bookings', {
         method: 'POST',
@@ -125,6 +162,44 @@ const UserDashboard = () => {
     } catch (e) {
       console.error('Error creating booking', e);
       alert('Failed to create booking');
+    }
+  };
+
+  const createOpenBooking = async () => {
+    if (!user || !user.token) {
+      alert("Please login to post a request!");
+      navigate('/login');
+      return;
+    }
+    if (!searchQuery) {
+      alert("Please specify a service/profession (e.g., Plumber) before posting.");
+      return;
+    }
+    try {
+      const res = await fetch('http://localhost:5000/api/bookings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({
+          profession: searchQuery,
+          address: locationQuery || user?.address,
+          lat: geo.status === 'ok' ? geo.lat : undefined,
+          lng: geo.status === 'ok' ? geo.lng : undefined,
+        }),
+      });
+      const data = await res.json();
+      if (!data.success) {
+        alert(data.message || 'Failed to create open request');
+        return;
+      }
+      alert('Open request broadcasted successfully! Nearby workers have been notified.');
+      setActiveTab('My Bookings');
+      fetchMyBookings();
+    } catch (e) {
+      console.error('Error creating open booking', e);
+      alert('Failed to create open request');
     }
   };
 
@@ -167,6 +242,35 @@ const UserDashboard = () => {
     phone: user?.phone || "+1234567890"
   });
 
+  const saveProfile = async () => {
+    if (!user?.token) return;
+    try {
+      const res = await fetch('http://localhost:5000/api/auth/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({
+          name: profileData.name,
+          phone: profileData.phone,
+          address: profileData.address,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        updateUser(data);
+        alert('Profile updated successfully');
+        setIsEditingProfile(false);
+      } else {
+        alert(data.message || 'Error updating profile');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      alert('Error updating profile');
+    }
+  };
+
   if (loading || !user) return <div className="min-h-screen pt-[72px] bg-slate-50 flex items-center justify-center">Loading...</div>;
 
   const categories = ['Plumber', 'Electrician', 'Cleaner', 'Carpenter', 'Painter', 'Maid','Barber',];
@@ -182,13 +286,18 @@ const UserDashboard = () => {
 
         <nav className="flex-1 px-4 py-6">
           <ul className="space-y-2">
-            {['Find Workers', 'My Bookings', 'Messages', 'Profile', 'Logout'].map((tab) => (
+            {(user ? ['Find Workers', 'My Bookings', 'Messages', 'Profile', 'Logout'] : ['Find Workers', 'Login']).map((tab) => (
               <li key={tab}>
                 <button
                   onClick={() => {
                     if (tab === 'Logout') {
                       logout();
-                      navigate('/App.jsx');
+                      navigate('/');
+                    } else if (tab === 'Login') {
+                      navigate('/login');
+                    } else if (!user && tab !== 'Find Workers') {
+                      alert("Please login to access this feature.");
+                      navigate('/login');
                     } else {
                       setActiveTab(tab);
                     }
@@ -210,7 +319,7 @@ const UserDashboard = () => {
       <main className="flex-1 p-6 md:p-10 overflow-y-auto">
         <header className="mb-12">
           <h1 className="text-3xl md:text-4xl font-black mb-2 tracking-tight text-slate-900">
-            Welcome, <span className="text-indigo-600">{user?.name ? user.name.split(' ')[0] : 'User'}</span>
+            Welcome, <span className="text-indigo-600">{user?.name ? user.name.split(' ')[0] : 'Guest'}</span>
           </h1>
           <p className="text-slate-500 font-medium">Find the best local professionals for your needs.</p>
         </header>
@@ -224,6 +333,7 @@ const UserDashboard = () => {
                    <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="e.g., Plumber, Cleaners..." className="flex-1 px-5 py-4 rounded-xl text-slate-900 focus:outline-none focus:ring-4 focus:ring-indigo-300" />
                    <input type="text" value={locationQuery} onChange={(e) => setLocationQuery(e.target.value)} placeholder="Location (e.g. New York)" className="flex-1 px-5 py-4 rounded-xl text-slate-900 focus:outline-none focus:ring-4 focus:ring-indigo-300" />
                    <button onClick={handleSearch} className="px-8 py-4 bg-slate-900 rounded-xl font-bold hover:bg-slate-800 transition-colors">Search</button>
+                   <button onClick={createOpenBooking} className="px-8 py-4 bg-indigo-600 rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-600/30 transition-colors whitespace-nowrap">Quick Post</button>
                  </div>
                </div>
                <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl transform translate-x-1/3 -translate-y-1/3"></div>
@@ -278,14 +388,14 @@ const UserDashboard = () => {
                           onClick={() => createBooking(w)}
                           className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl transition-colors"
                         >
-                          Book Worker
+                          Book Now
                         </button>
                       </div>
                     ))}
                   </div>
                 ) : (
                   <div className="text-center py-12 bg-white rounded-2xl border border-slate-100 shadow-sm">
-                    <p className="text-lg text-slate-600 font-medium mb-2">No workers found.</p>
+                    <p className="text-lg text-slate-600 font-medium mb-2">No worker available at your location.</p>
                     <p className="text-slate-500 text-sm">Try modifying your search criteria or checking another location.</p>
                   </div>
                 )}
@@ -306,14 +416,14 @@ const UserDashboard = () => {
                     <div>
                       <h3 className="font-bold text-lg text-slate-900 mb-1">{bk.profession || 'Service'}</h3>
                       <p className="text-sm text-slate-500">
-                        👤 {bk.worker?.name || 'Worker'} • 📍 {bk.address || 'Address'}
+                        👤 {bk.worker ? `Accepted by ${bk.worker.name}` : 'Waiting for professional...'} • 📍 {bk.address || 'Address'}
                       </p>
                       <p className="text-xs text-slate-400 mt-1">
                         Status: {bk.status}
                       </p>
                     </div>
                     <div className="flex items-center gap-3">
-                      {bk.status === 'pending' && (
+                      {(bk.status === 'pending' || bk.status === 'accepted') && (
                         <button
                           onClick={() => cancelBooking(bk._id)}
                           className="px-4 py-2 rounded-xl bg-red-600 text-white font-bold text-sm hover:bg-red-700"
@@ -324,6 +434,7 @@ const UserDashboard = () => {
                       <span className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider ${
                         bk.status === 'completed' ? 'bg-green-100 text-green-700' :
                         bk.status === 'cancelled' ? 'bg-red-100 text-red-700' :
+                        bk.status === 'accepted' ? 'bg-indigo-100 text-indigo-700' :
                         'bg-yellow-100 text-yellow-700'
                       }`}>
                         {bk.status}
@@ -362,7 +473,7 @@ const UserDashboard = () => {
                   <label className="block text-sm font-medium text-slate-600 mb-1">Address</label>
                   <input type="text" value={profileData.address} onChange={(e) => setProfileData({...profileData, address: e.target.value})} className="w-full border p-3 rounded-xl focus:ring-2 focus:ring-indigo-500" />
                 </div>
-                <button onClick={() => setIsEditingProfile(false)} className="px-8 py-3 bg-green-600 text-white font-bold rounded-xl mt-4">Save Changes</button>
+                <button onClick={saveProfile} className="px-8 py-3 bg-green-600 text-white font-bold rounded-xl mt-4">Save Changes</button>
               </div>
             ) : (
               <div className="space-y-6">

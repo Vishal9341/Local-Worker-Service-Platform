@@ -4,7 +4,12 @@ exports.getWorkers = async (req, res) => {
   try {
     const { profession, location } = req.query;
     
-    let query = { role: 'worker' };
+    const activeThreshold = new Date(Date.now() - 3 * 60 * 1000); // 3 minutes ago
+    let query = { 
+      role: 'worker', 
+      isAvailable: true,
+      lastActive: { $gte: activeThreshold }
+    };
     
     if (profession && profession.trim() !== '') {
       query.profession = { $regex: new RegExp(profession, 'i') };
@@ -37,12 +42,14 @@ exports.matchWorkers = async (req, res) => {
     } = req.query;
 
     const now = new Date();
+    const activeThreshold = new Date(Date.now() - 3 * 60 * 1000); // 3 minutes ago
     const desiredStart = start ? new Date(start) : null;
     const desiredEnd = end ? new Date(end) : null;
 
     const baseMatch = {
       role: 'worker',
       isAvailable: true,
+      lastActive: { $gte: activeThreshold }
     };
 
     if (profession && profession.trim() !== '') {

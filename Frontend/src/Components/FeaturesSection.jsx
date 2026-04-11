@@ -11,8 +11,22 @@ import {
   Shield,
   ChevronRight
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 const FeaturesSection = () => {
+  const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
+
+  const handleBookNow = (serviceTitle) => {
+    if (!user) {
+      navigate('/login');
+    } else {
+      navigate('/user-dashboard', { state: { category: serviceTitle } });
+    }
+  };
+
   const services = [
     {
       id: 1,
@@ -111,7 +125,10 @@ const FeaturesSection = () => {
                   </div>
                 </div>
 
-                <button className="w-full bg-linear-to-r from-blue-600 to-blue-700 text-white py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center space-x-2 group-hover:shadow-lg">
+                <button 
+                  onClick={() => handleBookNow(service.title)}
+                  className="w-full bg-linear-to-r from-blue-600 to-blue-700 text-white py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center space-x-2 group-hover:shadow-lg"
+                >
                   <span>Book Now</span>
                 </button>
               </div>

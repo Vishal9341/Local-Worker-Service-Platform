@@ -24,12 +24,10 @@ const userSchema = new mongoose.Schema({
   location: {
     type: {
       type: String,
-      enum: ['Point'],
-      default: 'Point',
+      enum: ['Point']
     },
     coordinates: {
-      type: [Number],
-      default: undefined, // keep undefined until user sets it
+      type: [Number]
     },
   },
   profession: {
@@ -41,6 +39,10 @@ const userSchema = new mongoose.Schema({
     default: 'user',
   },
   // Worker availability (simple on/off + optional window)
+  lastActive: {
+    type: Date,
+    default: Date.now,
+  },
   isAvailable: {
     type: Boolean,
     default: true,

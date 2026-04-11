@@ -8,7 +8,8 @@ const SignUp = () => {
     email: '',
     phone: '',
     password: '',
-    role: 'user' 
+    role: 'user',
+    profession: ''
   });
 
   const [error, setError] = useState('');
@@ -123,6 +124,21 @@ const SignUp = () => {
               <option value="worker">Worker (Providing services)</option>
             </select>
           </div>
+
+          {formData.role === 'worker' && (
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Profession</label>
+              <input
+                type="text"
+                name="profession"
+                required
+                value={formData.profession}
+                onChange={handleChange}
+                placeholder="e.g., Plumber, Electrician"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all placeholder:text-gray-400"
+              />
+            </div>
+          )}
 
           <button
             type="submit"

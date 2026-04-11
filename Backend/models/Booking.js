@@ -10,7 +10,6 @@ const bookingSchema = new mongoose.Schema(
     worker: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
     },
     profession: {
       type: String,
@@ -23,11 +22,9 @@ const bookingSchema = new mongoose.Schema(
       type: {
         type: String,
         enum: ['Point'],
-        default: 'Point',
       },
       coordinates: {
         type: [Number], // [lng, lat]
-        default: undefined,
       },
     },
     scheduledStart: {
@@ -38,7 +35,7 @@ const bookingSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['pending', 'cancelled', 'completed'],
+      enum: ['pending', 'accepted', 'cancelled', 'completed'],
       default: 'pending',
       index: true,
     },

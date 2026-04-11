@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 const Worker = () => {
-  const { user, logout, loading } = useContext(AuthContext);
+  const { user, logout, loading, updateUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,7 +15,7 @@ const Worker = () => {
   const [activeTab, setActiveTab] = useState('My Jobs');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
-  const [isAvailable, setIsAvailable] = useState(true);
+  const [isAvailable, setIsAvailable] = useState(user?.isAvailable !== undefined ? user.isAvailable : true);
   const [jobs, setJobs] = useState([]);
   const [loadingJobs, setLoadingJobs] = useState(false);
   const [geo, setGeo] = useState({ lat: null, lng: null, status: 'idle' });
@@ -26,9 +26,39 @@ const Worker = () => {
     profession: user?.profession || "Plumber",
     experience: "5 Yrs",
     hourlyRate: "$25/hr",
-    location: "New York, USA",
+    location: user?.address || "New York, USA",
     bio: "Experienced professional dedicated to top-quality service."
   });
+
+  const saveProfile = async () => {
+    if (!user?.token) return;
+    try {
+      const res = await fetch('http://localhost:5000/api/auth/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({
+          name: profileData.name,
+          phone: profileData.contactNo,
+          address: profileData.location,
+          profession: profileData.profession,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        updateUser(data);
+        alert('Profile updated successfully');
+        setIsEditingProfile(false);
+      } else {
+        alert(data.message || 'Error updating profile');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      alert('Error updating profile');
+    }
+  };
 
   useEffect(() => {
     if (!navigator.geolocation) return;
@@ -60,6 +90,7 @@ const Worker = () => {
         return;
       }
       setIsAvailable(Boolean(data.data?.isAvailable));
+      updateUser({ ...user, isAvailable: Boolean(data.data?.isAvailable) });
     } catch (e) {
       console.error('Error updating availability', e);
       alert('Failed to update availability');
@@ -133,27 +164,38 @@ const Worker = () => {
     }
   };
 
+  const acceptJob = async (bookingId) => {
+    if (!user?.token) return;
+    try {
+      const res = await fetch(`http://localhost:5000/api/bookings/${bookingId}/accept`, {
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
+      const data = await res.json();
+      if (!data.success) {
+        alert(data.message || 'Failed to accept job');
+        return;
+      }
+      fetchMyJobs();
+    } catch (e) {
+      console.error('Error accepting job', e);
+      alert('Failed to accept job');
+    }
+  };
+
+  const completedJobsCount = jobs.filter(j => j.status === 'completed').length;
+  const activeJobsCount = jobs.filter(j => j.status === 'accepted').length;
+
   const stats = [
-    { label: 'Total Earnings', value: ' 0', color: 'green' },
-    { label: 'Completed Jobs', value: '0', color: 'blue' },
-    { label: 'Current Rating', value: '0', color: 'yellow' },
-    { label: 'Active Jobs', value: '0', color: 'indigo' },
+    { label: 'Total Earnings', value: '0', color: 'green' },
+    { label: 'Completed Jobs', value: completedJobsCount.toString(), color: 'blue' },
+    { label: 'Current Rating', value: '4.8', color: 'yellow' },
+    { label: 'Active Jobs', value: activeJobsCount.toString(), color: 'indigo' },
   ];
-
-  // jobs are fetched from backend bookings
-
-  const availableJobs = [
-    { id: 101, title: 'Emergency Electrical Fix', category: 'Electrician', location: '2.5 miles away', price: '$85', urgency: 'High' },
-    { id: 102, title: 'Wooden Shelf Repair', category: 'Carpenter', location: '4.0 miles away', price: '$40', urgency: 'Normal' },
-    { id: 103, title: 'Garden Maintenance', category: 'Other', location: '1.2 miles away', price: '$55', urgency: 'Normal' },
-    { id: 104, title: 'Bathroom Pipe Leak', category: 'Plumber', location: '3.0 miles away', price: '$90', urgency: 'High' },
-    { id: 105, title: 'Deep Cleaning Service', category: 'Maid', location: '5.0 miles away', price: '$70', urgency: 'Normal' },
-    { id: 106, title: 'Wall Painting', category: 'Painter', location: '1.5 miles away', price: '$150', urgency: 'Normal' },
-  ].filter(job => job.category === profileData.profession || !profileData.profession);
 
   const navItems = [
     { name: 'My Jobs', icon: '📋' },
-    { name: 'Accept Job', icon: '➕' },
+    { name: 'New Requests', icon: '➕' },
     { name: 'Profile', icon: '👤' },
     { name: 'Logout', icon: '🚪' },
   ];
@@ -261,8 +303,8 @@ const Worker = () => {
                 <div className="space-y-4">
                   {loadingJobs ? (
                     <div className="text-slate-400">Loading jobs...</div>
-                  ) : jobs.length > 0 ? (
-                    jobs.map((job) => (
+                  ) : jobs.filter(j => j.status === 'accepted' || j.status === 'completed').length > 0 ? (
+                    jobs.filter(j => j.status === 'accepted' || j.status === 'completed').map((job) => (
                       <div key={job._id} className="group relative bg-slate-900/50 border border-slate-800 rounded-3xl p-6 hover:bg-slate-800/80 transition-all">
                         <div className="flex items-center gap-6">
                           <div className="p-4 bg-slate-800 rounded-2xl text-2xl group-hover:scale-110 transition-transform">📋</div>
@@ -279,7 +321,7 @@ const Worker = () => {
                             }`}>
                               {job.status}
                             </span>
-                            {job.status === 'pending' && (
+                            {job.status === 'accepted' && (
                               <div className="flex gap-2">
                                 <button
                                   onClick={() => cancelJob(job._id)}
@@ -331,30 +373,37 @@ const Worker = () => {
           </div>
         )}
 
-        {activeTab === 'Accept Job' && (
+        {activeTab === 'New Requests' && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h2 className="text-3xl font-black mb-10 tracking-tight">Available Jobs Marketplace</h2>
+            <h2 className="text-3xl font-black mb-10 tracking-tight">New Requests</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {availableJobs.map((job) => (
-                <div key={job.id} className="bg-slate-900/50 border border-slate-800 rounded-3xl p-8 hover:border-indigo-500/50 transition-all group overflow-hidden relative">
+              {jobs.filter(j => j.status === 'pending').length > 0 ? jobs.filter(j => j.status === 'pending').map((job) => (
+                <div key={job._id} className="bg-slate-900/50 border border-slate-800 rounded-3xl p-8 hover:border-indigo-500/50 transition-all group overflow-hidden relative">
                    <div className="absolute -right-12 -top-12 w-32 h-32 bg-indigo-500/5 rounded-full blur-3xl group-hover:bg-indigo-500/15 transition-all"></div>
                    <div className="flex justify-between items-start mb-6">
-                      <span className={`text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full ${
-                        job.urgency === 'High' ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'
-                      }`}>
-                        {job.urgency} Urgency
+                      <span className="bg-yellow-500/20 text-yellow-400 text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full">
+                        {job.worker ? 'Pending Request' : 'Open Broadcast'}
                       </span>
-                      <span className="text-2xl font-black text-white">{job.price}</span>
                    </div>
-                   <h3 className="text-xl font-bold mb-3">{job.title}</h3>
-                   <p className="text-slate-400 font-medium mb-8 flex items-center gap-2">
-                     <span className="text-lg">📍</span> {job.location}
+                   <h3 className="text-xl font-bold mb-3">{job.profession || 'Service'}</h3>
+                   <p className="text-slate-400 font-medium mb-3 flex items-center gap-2">
+                     <span className="text-lg">👤</span> {job.user?.name || 'Customer'}
                    </p>
-                   <button className="w-full py-4 bg-white text-indigo-950 font-black rounded-2xl hover:bg-slate-100 transition-all transform group-hover:scale-[1.02]">
-                     Accept Job
-                   </button>
+                   <p className="text-slate-400 font-medium mb-8 flex items-center gap-2">
+                     <span className="text-lg">📍</span> {job.address || 'Address'}
+                   </p>
+                   <div className="flex gap-4">
+                     <button onClick={() => job.worker ? cancelJob(job._id) : setJobs(jobs.filter(j => j._id !== job._id))} className="flex-1 py-4 bg-slate-800 text-white font-black rounded-2xl hover:bg-slate-700 transition-all">
+                       {job.worker ? 'Reject' : 'Ignore'}
+                     </button>
+                     <button onClick={() => acceptJob(job._id)} className="flex-1 py-4 bg-indigo-600 text-white font-black rounded-2xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20">
+                       Accept
+                     </button>
+                   </div>
                 </div>
-              ))}
+              )) : (
+                <div className="text-slate-400 col-span-full">No new requests.</div>
+              )}
             </div>
           </div>
         )}
@@ -407,7 +456,7 @@ const Worker = () => {
                       </div>
                       <div className="flex gap-3 justify-end mt-6">
                         <button onClick={() => setIsEditingProfile(false)} className="px-6 py-3 bg-slate-800 text-white rounded-xl font-bold hover:bg-slate-700 transition-all">Cancel</button>
-                        <button onClick={() => setIsEditingProfile(false)} className="px-8 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/30">Save Profile</button>
+                        <button onClick={saveProfile} className="px-8 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/30">Save Profile</button>
                       </div>
                     </div>
                   ) : (

@@ -18,7 +18,13 @@ const SignUp = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    let { name, value } = e.target;
+    if (name === 'password') {
+      value = value.replace(/[^a-zA-Z0-9]/g, '');
+    } else if (name === 'phone') {
+      value = value.replace(/[^0-9]/g, '');
+    }
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
@@ -108,6 +114,8 @@ const SignUp = () => {
               value={formData.password}
               onChange={handleChange}
               placeholder="••••••••"
+              pattern="[a-zA-Z0-9]+"
+              title="Password must contain only alphanumeric characters (no special characters)"
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all placeholder:text-gray-400"
             />
           </div>

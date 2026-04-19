@@ -30,7 +30,6 @@
  ####  React JS
  ####  Tailwind CSS
   #### JavaScript (ES6)
- ####  React Routing
   
  ## Backend:
  ####  Node.js
@@ -42,6 +41,6 @@
 ## Live Demo
 
 - 🔗 Frontend: https://local-worker-service-platform.vercel.app/
-- 🔗 Backend API: https://local-worker-service-platform.onrender.com
+- 🔗 Backend: https://local-worker-service-platform.onrender.com
 
 

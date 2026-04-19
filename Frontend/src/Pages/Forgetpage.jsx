@@ -18,6 +18,7 @@ const ForgotPassword = () => {
     // Strict email validation to prevent random text
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) {
+      alert("Please enter a proper email address (e.g., yourname@gmail.com)");
       setError("Please enter a proper email address (e.g., yourname@gmail.com)");
       return;
     }

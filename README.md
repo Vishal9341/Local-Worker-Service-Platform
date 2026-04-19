@@ -39,3 +39,9 @@
 ## Database:
 ####  MongoDB
 
+## Live Demo
+
+- 🔗 Frontend: https://local-worker-service-platform.vercel.app/
+- 🔗 Backend API: https://local-worker-service-platform.onrender.com
+
+

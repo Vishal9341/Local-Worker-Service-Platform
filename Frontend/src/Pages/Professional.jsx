@@ -17,15 +17,30 @@ const Professional = () => {
   });
 
   const handleChange = (e) => {
+    let { name, value } = e.target;
+    if (name === 'phone') {
+      if (/[^0-9]/.test(value)) {
+        alert("write proper number");
+      }
+      value = value.replace(/[^0-9]/g, '');
+    }
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    const phoneRegex = /^[0-9]+$/;
+    if (!phoneRegex.test(formData.phone)) {
+      alert("write proper number");
+      setError("Please write a proper phone number (only numeric characters are allowed)");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -126,6 +141,8 @@ const Professional = () => {
               type="tel"
               name="phone"
               placeholder="Enter phone number"
+              pattern="[0-9]+"
+              title="Please write a proper phone number (only numeric characters are allowed)"
               value={formData.phone}
               onChange={handleChange}
               className="w-full border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"

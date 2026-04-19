@@ -22,6 +22,9 @@ const SignUp = () => {
     if (name === 'password') {
       value = value.replace(/[^a-zA-Z0-9]/g, '');
     } else if (name === 'phone') {
+      if (/[^0-9]/.test(value)) {
+        alert("write proper number");
+      }
       value = value.replace(/[^0-9]/g, '');
     }
     setFormData({ ...formData, [name]: value });
@@ -30,6 +33,21 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    // Strict email validation to prevent random text
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(formData.email)) {
+      setError('Please enter a proper email address (e.g., yourname@gmail.com)');
+      return;
+    }
+
+    const phoneRegex = /^[0-9]+$/;
+    if (!phoneRegex.test(formData.phone)) {
+      alert("write proper number");
+      setError("Please write a proper phone number (only numeric characters are allowed)");
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await fetch('https://local-worker-service-platform.onrender.com', {
@@ -98,6 +116,8 @@ const SignUp = () => {
               type="tel"
               name="phone"
               required
+              pattern="[0-9]+"
+              title="Please write a proper phone number (only numeric characters are allowed)"
               value={formData.phone}
               onChange={handleChange}
               placeholder="Enter your mobile number"

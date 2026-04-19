@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config(); // load .env FIRST
 
-const app = express(); // ✅ create app BEFORE using it
+const app = express(); 
 
 const PORT = process.env.PORT || 5000;
 
@@ -29,12 +29,12 @@ console.log("MONGO_URI:", process.env.MONGO_URI);
 // Database connection
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
-    console.log('✅ MongoDB Atlas Connected Successfully');
+    console.log(' MongoDB Atlas Connected Successfully');
 
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
+      console.log(` Server running on port ${PORT}`);
     });
   })
   .catch((err) => {
-    console.error('❌ MongoDB connection error:', err);
+    console.error(' MongoDB connection error:', err);
   });

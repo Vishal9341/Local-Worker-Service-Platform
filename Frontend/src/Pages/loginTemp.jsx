@@ -71,9 +71,11 @@ const Login = () => {
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value.replace(/[^a-zA-Z0-9]/g, ''))}
               placeholder="Enter your password"
               required
+              pattern="[a-zA-Z0-9]+"
+              title="Password must contain only alphanumeric characters (no special characters)"
               className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>

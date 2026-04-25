@@ -21,7 +21,7 @@ const Professional = () => {
     let { name, value } = e.target;
     if (name === 'phone') {
       if (/[^0-9]/.test(value)) {
-        alert("write proper number");
+        alert("write Valid number");
       }
       value = value.replace(/[^0-9]/g, '');
     }
@@ -37,7 +37,7 @@ const Professional = () => {
 
     const phoneRegex = /^[0-9]+$/;
     if (!phoneRegex.test(formData.phone)) {
-      alert("write proper number");
+      alert("write Valid number");
       setError("Please write a proper phone number (only numeric characters are allowed)");
       return;
     }
@@ -49,7 +49,7 @@ const Professional = () => {
       const payload = {
         name: formData.name,
         email: formData.email,
-        password: formData.Password, // Match the state property name
+        password: formData.Password, 
         phone: formData.phone,
         address: formData.address,
         role: "user" // Hardcoding role based on this form's purpose
@@ -163,11 +163,6 @@ const Professional = () => {
               required
             />
           </div>
-
-        
-    
-
-          
           <button
             type="submit"
             disabled={loading}

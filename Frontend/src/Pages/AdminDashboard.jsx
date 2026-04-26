@@ -12,18 +12,73 @@ const AdminDashboard = () => {
   }, [user, loading, navigate]);
 
   const [activeTab, setActiveTab] = useState('Overview');
+  const [dashboardData, setDashboardData] = useState({
+    stats: { totalUsers: 0, activeProfessionals: 0, completedJobs: 0, platformRevenue: '$0' },
+    recentUsers: []
+  });
+  const [allUsers, setAllUsers] = useState([]);
+  const [isFetching, setIsFetching] = useState(false);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setIsFetching(true);
+        const token = localStorage.getItem('token');
+        const res = await fetch('https://local-worker-service-platform.onrender.com/api/admin/dashboard', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setDashboardData(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch dashboard data", error);
+      } finally {
+        setIsFetching(false);
+      }
+    };
+
+    if (user && user.role === 'admin' && activeTab === 'Overview') {
+      fetchDashboardData();
+    }
+  }, [user, activeTab]);
+
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      try {
+        setIsFetching(true);
+        const token = localStorage.getItem('token');
+        const res = await fetch('https://local-worker-service-platform.onrender.com/api/admin/users', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setAllUsers(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch all users", error);
+      } finally {
+        setIsFetching(false);
+      }
+    };
+
+    if (user && user.role === 'admin' && activeTab === 'Manage Users') {
+      fetchAllUsers();
+    }
+  }, [user, activeTab]);
+
   const stats = [
-    { label: 'Total Users', value: '124', icon: '👥' },
-    { label: 'Active Professionals', value: '45', icon: '🛠️' },
-    { label: 'Completed Jobs', value: '890', icon: '✅' },
-    { label: 'Platform Revenue', value: '$4,200', icon: '💰' },
+    { label: 'Total Users', value: dashboardData.stats.totalUsers, icon: '👥' },
+    { label: 'Active Professionals', value: dashboardData.stats.activeProfessionals, icon: '🛠️' },
+    { label: 'Completed Jobs', value: dashboardData.stats.completedJobs, icon: '✅' },
+    { label: 'Platform Revenue', value: dashboardData.stats.platformRevenue, icon: '💰' },
   ];
 
-  const recentUsers = [
-    { id: 1, name: ' ', email: 'arpit@example.com', role: 'user', joined: '2026-03-27' },
-    { id: 2, name: ' ', email: 'vk@gmail.com', role: 'worker', joined: '2026-03-27' },
-    { id: 3, name: ' ', email: 'vishal@gmail.com', role: 'admin', joined: '2026-03-26' },
-  ];
+  const recentUsers = dashboardData.recentUsers;
 
   if (loading || !user) return <div className="min-h-screen pt-[72px] bg-slate-50 flex items-center justify-center">Loading Admin Panel...</div>;
 
@@ -94,7 +149,7 @@ const AdminDashboard = () => {
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {recentUsers.map(u => (
-                    <tr key={u.id} className="hover:bg-slate-50 transition-colors">
+                    <tr key={u._id} className="hover:bg-slate-50 transition-colors">
                       <td className="px-8 py-5">
                         <p className="font-bold text-slate-800">{u.name}</p>
                         <p className="text-sm text-slate-500">{u.email}</p>
@@ -117,6 +172,55 @@ const AdminDashboard = () => {
                       </td>
                     </tr>
                   ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'Manage Users' && (
+          <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-200 overflow-hidden animate-in fade-in duration-500">
+            <div className="p-8 border-b border-slate-100 flex justify-between items-center">
+              <h3 className="text-xl font-bold text-slate-800">All Registered Users</h3>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead className="bg-slate-50 text-slate-400 text-xs font-bold uppercase tracking-wider">
+                  <tr>
+                    <th className="px-8 py-4">User</th>
+                    <th className="px-8 py-4">Role</th>
+                    <th className="px-8 py-4">Joined</th>
+                    <th className="px-8 py-4">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {allUsers.map(u => (
+                    <tr key={u._id} className="hover:bg-slate-50 transition-colors">
+                      <td className="px-8 py-5">
+                        <p className="font-bold text-slate-800">{u.name}</p>
+                        <p className="text-sm text-slate-500">{u.email}</p>
+                      </td>
+                      <td className="px-8 py-5">
+                        <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase ${
+                          u.role === 'worker' ? 'bg-blue-100 text-blue-600' : 
+                          u.role === 'admin' ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'
+                        }`}>
+                          {u.role}
+                        </span>
+                      </td>
+                      <td className="px-8 py-5 text-sm text-slate-500 font-medium">
+                        {new Date(u.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="px-8 py-5">
+                        <button className="text-slate-400 hover:text-slate-600 font-bold">Edit</button>
+                      </td>
+                    </tr>
+                  ))}
+                  {allUsers.length === 0 && !isFetching && (
+                    <tr>
+                      <td colSpan="4" className="px-8 py-8 text-center text-slate-500">No users found.</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>

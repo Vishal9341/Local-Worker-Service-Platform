@@ -12,6 +12,8 @@ import Contact from "./Pages/Contact";
 import Worker from "./Pages/Worker";
 import User from "./Pages/User"
 import UserDashboard from "./Pages/UserDashboard";
+import AdminDashboard from "./Pages/AdminDashboard";
+import BookingWizard from "./Pages/BookingWizard";
 import NotFound from "./Pages/NotFound";
 
 import { Routes, Route } from "react-router-dom";
@@ -41,6 +43,8 @@ const App = () => {
         <Route path="/worker" element={<Worker />} />
         <Route path="/user" element={<User />} />
         <Route path="/user-dashboard" element={<UserDashboard />} />
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/book/:profession" element={<BookingWizard />} />
         <Route path="/*" element={<NotFound />} />
 
       </Routes>

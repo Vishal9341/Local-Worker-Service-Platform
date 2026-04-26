@@ -23,7 +23,7 @@ const FeaturesSection = () => {
     if (!user) {
       navigate('/login');
     } else {
-      navigate('/user-dashboard', { state: { category: serviceTitle } });
+      navigate('/book/' + serviceTitle.toLowerCase());
     }
   };
 

@@ -16,7 +16,7 @@ exports.createBooking = async (req, res) => {
       return res.status(403).json({ success: false, message: 'Only users can create bookings' });
     }
 
-    const { workerId, profession, address, lat, lng, scheduledStart, scheduledEnd } = req.body;
+    const { workerId, profession, address, issueDescription, lat, lng, scheduledStart, scheduledEnd } = req.body;
     
     let targetWorker = null;
     let finalProfession = profession;
@@ -40,6 +40,7 @@ exports.createBooking = async (req, res) => {
       user: req.user._id,
       profession: finalProfession,
       address: address || req.user.address,
+      issueDescription: issueDescription,
       scheduledStart: scheduledStart ? new Date(scheduledStart) : undefined,
       scheduledEnd: scheduledEnd ? new Date(scheduledEnd) : undefined,
     };

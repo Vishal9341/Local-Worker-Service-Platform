@@ -18,6 +18,9 @@ const bookingSchema = new mongoose.Schema(
     address: {
       type: String,
     },
+    issueDescription: {
+      type: String,
+    },
     userLocation: {
       type: {
         type: String,
